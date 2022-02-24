@@ -13,7 +13,7 @@
 >/users (Lista de usuarios)
 ## Usuario de admin
 - User: admin
-- Email:admin
+- Email:admin@gmail.com
 - Password: admin1234
 
 ## Start Doing: (cosas nuevas para probar) ⭐
