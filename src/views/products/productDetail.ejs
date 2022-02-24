@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+    <%- include( '../partials/head') %>
+    
+    <body>
+    
+        <%- include('../partials/header') %>
+
+        <main>
+            <article class="prod-detail">
+                <div class="img-container">
+                    <div class="img-principal">
+                        <img src = "/images/products/<%=url_image%> ">
+                    </div>
+
+                    <div class="slider-buttons-container"> 
+                        <div class="items"> 
+                            <a href="#"><i class="fas fa-chevron-left"></i></a>
+                        </div>
+                        <div class="items">
+                            <a href="#"><i class="fas fa-chevron-right"></i></a>
+                        </div> 
+                    </div>
+
+                </div>
+
+                <div class="product-description">
+                    <p class="nombre-prod"> <%= product.name %>  </p>
+
+                    <div class="stars">
+                        <div class="score">
+                            <% for( let index = 1; index <= 5; index++ ) { %>
+
+                                <% if (index <= product.idStar) { %>
+                                    <i class="far fa-star" style="color: #d4b073;"></i>
+                                 
+                                <% }else { %>
+                                    <i class="far fa-star"></i>
+                                <% } %> 
+                            
+                            <% } %> 
+
+                        </div>
+                        <% if(product.idStar == 0){ %>
+                            <p>0 Reviews </p>  
+                        <%}else{ %> 
+                            <p> 127437 Reviews </p>
+                        <%} %> 
+                    </div>
+
+                    <p class="precio"> $<%= product.price %>  </p>
+                    
+                    <form action="/products/<%= product.id %>/prodCart" method="POST">
+                    
+                        <div class="color"> <!-- agregar al objeto una array de colores y iterarlos con un foreach-->
+                            
+                                <div class="check-c-s">
+                                    <input class="chk" type="checkbox" value="<%=product.idColour%>" name="color" id="colour">
+                                    <label class="lbl" for = "colour">
+                                        <img src = "/images/colores/<%=url_color%>.jpg">
+                                    </label> 
+                                </div>
+                            
+                        </div> 
+
+                            <div class="size">
+                                
+                                    <div class="check-size">
+                                        <input class="chk" type="checkbox" value="<%=product.idSizes%>" name="sizes" id ="size">                                        
+                                        <label class="lbl" for = "size"> <%=talle%> </label> 
+                                    </div> 
+                                 
+                            </div>
+
+                        <div class="cantidad">
+                                
+                                <% if (user && user.idRoles != 1) { %>
+                                    <label for="cant">
+                                    Cantidad: 
+                                    </label>
+                                    <input type="number" id="cant" name="cant" min="1" value="1">
+                                    <button type="submit" class="style-button">Agregar al carrito</button>
+                                <% } %>
+
+                                
+                        </div>
+                    </form>
+                    <div class="locales">
+                        <a href="/locals">Ver locales donde esta disponible el producto</a>
+                    </div>   
+
+                    <div class = "description">
+                        <p class="title"> Descripción:</p>
+
+                        <p class="content"> <%= product.description %> 
+                        </p>
+                    </div>
+                    <% if (user &&  user.idRoles == 1) { %>
+                        <div class="Botones"> 
+                            <form action="/products/<%=product.id%>/edit"style="display: inline-flex" class="delete">
+                                <button type="submit" class="style-button">Editar producto</button>
+                            </form>
+                            <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="display: inline-flex" class="delete">
+                                <button type="submit" class="action-button delete style-button">ELIMINAR</button>
+                            </form>
+                        </div>
+                    <% } %>
+                    
+                </div> 
+            </article>
+
+            <div class="title-recom">
+                <p class= "title-recom"> Tambien te puede gustar </p>
+            </div>
+
+
+        </main>
+
+        <%- include('../partials/footer') %> 
+    </body>
+</html>
