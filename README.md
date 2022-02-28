@@ -1,4 +1,4 @@
-# G12_LSKV_FC_Sprint6
+# G12_LSKV_FC_Sprint7
 *RETROSPECTIVA*
 
 > **Arreglamos los errores con Heroku, en el  require de jsonDB en usersController era ('../model/jsonUsersDatabase')**
