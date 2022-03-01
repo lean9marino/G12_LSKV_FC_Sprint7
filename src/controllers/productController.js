@@ -234,7 +234,7 @@ const productController = {
         console.log(req.body.cant)
         let prod = [req.params.id,req.body.cant,req.body.sizes]
         res.cookie('carrito', prod, {maxAge:60000*60*60});
-        console.log(req.cookies.carrito)
+        console.log(req.cookies.carrito)  
         res.redirect('/products/productCart')
     },
     prodCart1: function(req,res){

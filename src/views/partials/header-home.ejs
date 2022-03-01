@@ -12,7 +12,32 @@
 
             <div class="buscador">
                 <form action="/search" method="GET">
-                    <input class="global" type="text" name="busqueda" placeholder="Buscar productos, marcas y más">
+                    <div class="contenedorCategory">
+                        <select name="category" id="category">
+                            <option value = 0>
+                                Categoria
+                            </option>
+                            <% categories.forEach(cate=>{ %> 
+                                <option value = <%=cate.id%>>
+                                    <%= cate.name %>
+                                </option>
+                               <% }) %> 
+                        </select>
+                    </div>
+
+                    <div class="contenedorStyle">
+                        <select name="style" id="style">
+                            <option value = 0>
+                                Estilo 
+                            </option>
+                            <% styles.forEach(st=>{ %> 
+                                <option value=<%= st.id %>>
+                                    <%= st.name %>
+                                </option>
+                            <% })%>
+                        </select>
+                    </div>
+                    <input type="text" name="busqueda" placeholder="Buscar productos, marcas y más">
                     <button type="submit" ><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -33,7 +58,7 @@
         </div>
         <div class="buscador2">
             <form action="/search" method="GET" >
-                <input type="text" name="keywords" placeholder="¿Qué buscas?">
+                <input type="text" name="busqueda" placeholder="¿Qué buscas?">
                 <button type="submit" ><i class="fas fa-search"></i></button>
             </form>
         </div>

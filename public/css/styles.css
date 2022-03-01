@@ -21,7 +21,7 @@ main,header,footer{
 }
 
 header div.container {
-    max-width: 1000px;
+    max-width: 1200px;
 }
 
 div.container{
@@ -199,12 +199,15 @@ div.buscador2 form {
 }
 header div.buscador form input,
 div.buscador2 form input { 
-    width: 100%;
+    width: 80%;
     display: block;
     border: solid 1px var(--rojo);
     height: 33px;
     border-radius: 3px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0,30%);
+}
+header div.buscador form input.global{
+    width: 100%;
 }
 header div.buscador form button,
 div.buscador2 form button{ 
@@ -1715,14 +1718,30 @@ main.usuarios form button {
     }
     header div.buscador { 
         display: flex;
-        width: 70%;
+        width: 75%;
     }
+
     header div.buscador form { 
         width: 100%;
         position: relative;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+    } 
+    header div.buscador form select{
+        height: 25px;
+        width: 54px;
     }
+
+    header div.buscador form select,
+    header div.buscador form option{ 
+        color: var(--rojo);
+        font-size: 15px;
+        font-family: 'Bebas Neue', cursive;
+        border: solid 1px var(--rojo);
+        box-shadow: 0 1px 2px 0 rgb(0,0,0, 30%)
+    }
+
     /* Footer */
     .footer-Top { 
         flex-wrap: nowrap;
