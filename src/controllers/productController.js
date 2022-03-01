@@ -4,6 +4,7 @@ const db=require("../database/models");
 const { Op } = require("sequelize");
 const { validationResult } = require('express-validator'); 
 const log = console.log;
+
 Promise.all(db.Categorys.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll())
 .then(([cate,size,styl,colr])=>{
     categories = cate; 
