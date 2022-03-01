@@ -6,7 +6,6 @@ const { validationResult } = require('express-validator');
 const log = console.log;
 
 
-
 const productController = {
     prodDetail: (req,res) =>{
         db.Products.findByPk(req.params.productId,
