@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+    <%- include( '../partials/head') %>
+    <body>
+        <%- include('../partials/header') %>
+        <main class="productList">            
+            <section class="products">
+                    <% productList.forEach(element => { %>
+                            <article>
+                                <a href="/products/<%= element.id  %>"><img src="/images/products/<%= element.ImageProduct[0].urlName %>"></a>
+                                <div class="descripcion">
+                                <h4> <%= element.name %> </h4>   
+                                <p class="cat"> <%= element.category.name %> </p>
+                                <p class="cat"> <%= element.Styles.name %> </p>
+                                <p class="precio">$<%= element.price %> </p>
+
+                                </div>
+                            </article>
+
+                    <% }) %>
+            </section>
+        </main>
+        <%- include('../partials/footer') %> 
+    </body>    
+</html>

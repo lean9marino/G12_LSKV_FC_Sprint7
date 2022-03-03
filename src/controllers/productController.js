@@ -198,7 +198,7 @@ const productController = {
             })
             .then(prods=>{
                 let Filtros = [prods[0].Styles];
-                return res.render('products/productfilter',{productList:prods, Filtros });
+                return res.render('products/productFilter',{productList:prods, Filtros });
             })
             .catch(err=> console.log(err))
         }else{
@@ -229,6 +229,68 @@ const productController = {
             .catch(err=> console.log(err))
         }
     },
+
+    search: (req,res)=>{
+        //category, style, search
+        log('Entro al controller de Search')
+        let query = req.query; 
+        if(query.category != 0 && query.style == 0){
+        // CASO CATEGORIA NO NULA 
+            db.Products.findAll({
+                where:{
+                    [Op.and]:[
+                        {idCategory: query.category},
+                        {name: {[Op.like]: "%" + req.query.search + "%"}}
+                    ]
+                },
+                include:[{association: 'ImageProduct'},{association: 'category'},{association: 'Styles'}]
+            })
+            .then(prods=>{ 
+                return res.render('products/search',{productList:prods})
+            })
+        }else if(query.category == 0 && query.style != 0){
+        // CASO STYLE NO NULO
+            db.Products.findAll({
+                where:{
+                    [Op.and]:[
+                        {idStyle: query.style},
+                        {name: {[Op.like]: "%" + req.query.search + "%"}}
+                    ]
+                },
+                include:[{association: 'ImageProduct'},{association: 'category'},{association: 'Styles'}]
+            })
+            .then(prods=>{ 
+                return res.render('products/search',{productList:prods})
+            })
+        }else if(query.category == 0 && query.style == 0){ 
+        // CASO AMBOS NULOS 
+            db.Products.findAll({
+                where:{
+                    name: {[Op.like]: "%" + req.query.search + "%"}
+                },
+                include:[{association: 'ImageProduct'},{association: 'category'},{association: 'Styles'}]
+            })
+            .then(prods=>{ 
+                return res.render('products/search',{productList:prods})
+            })
+        }else{ 
+        // CASO AMBOS NO NULOS
+            db.Products.findAll({
+                where:{
+                    [Op.and]:[
+                        {idStyle: query.style},
+                        {idCategory: query.category},
+                        {name: {[Op.like]: "%" + req.query.search + "%"}}
+                    ]
+                },
+                include:[{association: 'ImageProduct'},{association: 'category'},{association: 'Styles'}]
+            })
+            .then(prods=>{ 
+                return res.render('products/search',{productList:prods})
+            })
+        }
+    },
+
     prodCart: function (req,res){
         console.log(req.params.id)
         console.log(req.body.cant)
