@@ -14,9 +14,13 @@
                            <h2 class="izquierda">Iniciar sesion</h2>
                            <h4>¿Ya eres cliente?</h4>
                            <p>¡Bienvenido de nuevo!</p>
-       
+                            <div class="errores">
+                                 <ul> 
+
+                                 </ul>
+                            </div>
                            
-                          <form action="/users/login" method="POST">
+                          <form action="/users/login" method="POST" class="formLogin">
                               
                                  <div>
                                      <% if (locals.errors) { %>
@@ -29,13 +33,15 @@
                                    <label for="email">Correo electronico o nombre de usuario</label>
                                     <input type="text" 
                                     name="email"
-                                    id= 'email'>
+                                    id= 'email'
+                                    class="email">
                               </div>
                               <div>
                                   <label for="password">Contraseña</label>
                                     <input type="password" 
                                     name="password"
-                                    id="password">
+                                    id="password" 
+                                    class="password">
                                 </div>
                        
                         
@@ -73,5 +79,6 @@
      </main>  
      
      <%- include('../partials/footer') %> 
+     <script src="/js/validation-login.js"></script>
     </body>
 </html>
