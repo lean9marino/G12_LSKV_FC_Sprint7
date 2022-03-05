@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Image_product.init({
     urlName: DataTypes.STRING,
-    idproducts: DataTypes.INTEGER
+    idproducts: DataTypes.INTEGER,
+    order: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Image_product',

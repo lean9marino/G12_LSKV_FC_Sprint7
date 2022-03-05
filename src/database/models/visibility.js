@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Visibility',
+    timestamps:false
   });
   return Visibility;
 };

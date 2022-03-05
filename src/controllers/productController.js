@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 const { validationResult } = require('express-validator'); 
 const log = console.log;
 
-
 const productController = {
     prodDetail: (req,res) =>{
         db.Products.findByPk(req.params.productId,
@@ -44,7 +43,7 @@ const productController = {
     },
 
     create: (req,res) => {
-        Promise.all([db.Categorys.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll()])
+        Promise.all([db.Categories.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll()])
         .then(([categories,sizes,styles,colours])=>{
             return res.render("products/productCreate",{sizes,colours,styles,categories})
         })
@@ -62,12 +61,19 @@ const productController = {
         const resultValidation = validationResult(req); 
         console.log(resultValidation.errors);
         if(resultValidation.errors.length > 0 ){ 
-            return res.render('products/productCreate', { 
-                errors: resultValidation.mapped(), 
-                oldData: req.body,
-                categories, 
-                sizes, 
-                colours
+            Promise.all([
+                db.Categories.findAll(),
+                db.Colours.findAll(),
+                db.Sizes.findAll()
+            ])
+            .then(([categories,sizes,colours])=>{
+                return res.render('products/productCreate', { 
+                    errors: resultValidation.mapped(), 
+                    oldData: req.body,
+                    categories, 
+                    sizes, 
+                    colours
+                })
             })
         }else{ 
             let colorArray = req.body.color;
@@ -109,7 +115,7 @@ const productController = {
                     include:[{association: 'ImageProduct'}]
                 }),
             db.Styles.findAll(),
-            db.Categorys.findAll(),
+            db.Categories.findAll(),
             db.Colours.findAll(),
             db.Sizes.findAll()
         ])
@@ -214,7 +220,7 @@ const productController = {
                     },
                     include: [{association: 'ImageProduct'},{association: 'category'},{association: 'Styles'}]
                 }),
-                db.Categorys.findAll({
+                db.Categories.findAll({
                     where: {                    
                         [Op.or]: [
                         { id: query.category }, 

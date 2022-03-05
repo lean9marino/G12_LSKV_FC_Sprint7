@@ -14,13 +14,8 @@ module.exports = {
       idproducts: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+      order:{
+        type: Sequelize.INTEGER
       }
     });
   },
