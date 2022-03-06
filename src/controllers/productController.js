@@ -13,6 +13,8 @@ const productController = {
                         {association: 'Sizes'}
         ]})
         .then(product=>{
+            log('colores',product.Colours);
+            log('sizes',product.Sizes);
             db.Products.findAll({
                 where:{[Op.or]: [
                     { idCategory: product.idCategory }, 
@@ -26,17 +28,18 @@ const productController = {
                 log('imgs',prods[0])
                 return res.render("products/productDetail",{product, prods})
             })
-            .catch(err => console.log(err));
-        });
+            .catch(err => log(err));
+        })
+        .catch(err=>log(err))
     },
     
     list: (req,res) => {
-        console.log("Entre a producto List")
-
+        log("Entre a producto List")
         db.Products.findAll({
             include:[{association: 'Styles'}, {association: 'ImageProduct'}]
         })
         .then(productList=>{
+            log('img',productList[0].ImageProduct[0].urlName)
             return res.render('products/productList', { productList });
         })
         .catch(err => console.log(err));
@@ -75,11 +78,12 @@ const productController = {
                     colours
                 })
             })
+            .catch(err=>log(err))
         }else{ 
             let colorArray = req.body.color;
             let sizesArray = req.body.sizes;
             if(!Array.isArray(req.body.color)) colorArray = [req.body.color];
-            if(!Array.isArray(req.body.sizes)) sizesArray = [req.body.sizes];  
+            if(!Array.isArray(req.body.sizes)) sizesArray = [req.body.sizes];
             let filenamesImgSec = [];
             if(req.files.images){ 
                 for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
@@ -90,20 +94,47 @@ const productController = {
                 description: req.body.description, 
                 idStar: 1,
                 idCategory: req.body.category,
-                idColour: colorArray[0],
-                idSize:sizesArray[0],
-                idStyle: req.body.Style
+                idStyle: req.body.Style,
+                discount: 0, 
+                shipping: 0,
             })
-            .then(res => {
-                console.log("Creando producto" ,res)
-                console.log("id del producto",res.dataValues.id)
+            .then(prod => {
+                console.log("Creando producto" ,prod)
+                console.log("id del producto",prod.id)
                 db.Image_product.create({
                     urlName: req.files.image[0].filename,
-                    idproducts: res.dataValues.id
+                    idproducts: prod.id,
+                    order: 1
                 })
-                .then(res=>console.log("imagen",res))
+                .then(res=> log("imagen",res))
+                .catch(err => log(err));
+                filenamesImgSec.forEach((img,i,arr)=>{
+                    db.Image_product.create({
+                        urlName: img,
+                        idproducts: prod.id,
+                        order: i + 2
+                    })
+                    .then(valor=>log(valor))
+                    .catch(err => log(err));
+                })
+                colorArray.forEach(colour=>{
+                    db.colours_product.create({
+                        product_id:prod.id, 
+                        colour_id: colour
+                    })
+                    .then()
+                    .catch(err=>log(err)); 
+                })
+                sizesArray.forEach(size=>{
+                    db.sizes_product.create({
+                        product_id:prod.id,
+                        size_id: size
+                    })
+                    .then()
+                    .catch(err=>log(err)); 
+                })
             })
-            .catch(err => console.log(err))
+            .catch(err => log(err))
             return res.redirect('/'); 
         }
     },
@@ -111,15 +142,18 @@ const productController = {
     edition: (req,res) => {
         Promise.all([
             db.Products.findByPk(req.params.id,
-                {
-                    include:[{association: 'ImageProduct'}]
-                }),
+                {include: [ {association: 'ImageProduct'},
+                            {association: 'Colours'},
+                            {association: 'Sizes'}
+            ]}),
             db.Styles.findAll(),
             db.Categories.findAll(),
             db.Colours.findAll(),
             db.Sizes.findAll()
         ])
         .then(([product,styles,categories,colours,size]) => {
+            let colour = colours[0]
+            log('colors',product.Colours.find(e=>e.id==colour.id));
             return res.render("products/productEdition", { product,styles,categories,colours,size });
         })
         .catch(err => console.log("producto",err));
@@ -127,8 +161,7 @@ const productController = {
 
     prodEdition: (req,res)=>{
     db.Products.findByPk(req.params.id)
-        .then(resP => {
-            let product = resP
+        .then(product => {
             db.Image_product.findOne({where:{idproducts : req.params.id}})
             .then(resI =>  {
                 let imgP = resI.urlName
@@ -157,39 +190,39 @@ const productController = {
                 }
                 console.log('Aca va BODY: ');
                 console.log(req.body);
-
-                    db.Products.update(
-                    {
-                        name: req.body.name,
-                        price: Number(req.body.price),
-                        description: req.body.description, 
-                        idStar: 1,
-                        idCategory: req.body.category,
-                        idStyles: req.body.Style,
-                        idColour: colorArray[0],
-                        idSize: sizesArray[0]
+                db.Products.update(
+                {
+                    name: req.body.name,
+                    price: Number(req.body.price),
+                    description: req.body.description, 
+                    idStar: 1,
+                    idCategory: req.body.category,
+                    idStyles: req.body.Style,
+                    idColour: colorArray[0],
+                    idSize: sizesArray[0]
+                },
+                {
+                    where: {id: product.id}
+                })
+                .then(()=>{
+                    db.Image_product.update({
+                        urlName: imgP,
+                        idproducts: product.id
                     },
                     {
-                        where: {id: product.id}
+                        where: {idproducts: product.id}
                     })
-                    .then(()=>{
-                        db.Image_product.update({
-                            urlName: imgP,
-                            idproducts: product.id
-                        },
-                        {
-                            where: {idproducts: product.id}
-                        })
-                        .then(resImg=>
-                            {
-                                console.log("imagen",resImg)
-                                res.redirect(`/products/${req.params.id}`);
-                            })
+                    .then(resImg=>{
+                            console.log("imagen",resImg)
+                            res.redirect(`/products/${req.params.id}`);
                     })
-                        })
-                        .catch(err => console.log("imagen",err))
+                    .catch(err => log(err))
+                })
+                .catch(err => console.log("imagen",err))
+            })
+            .catch(err => log("imagen",err))
         })
-        .catch(err => console.log("producto",err))
+        .catch(err => log("producto",err))
     },
 
     filter: (req,res)=>{ 
@@ -254,6 +287,7 @@ const productController = {
             .then(prods=>{ 
                 return res.render('products/search',{productList:prods})
             })
+            .catch(err=>log(err))
         }else if(query.category == 0 && query.style != 0){
         // CASO STYLE NO NULO
             db.Products.findAll({
@@ -268,6 +302,7 @@ const productController = {
             .then(prods=>{ 
                 return res.render('products/search',{productList:prods})
             })
+            .catch(err=>log(err))
         }else if(query.category == 0 && query.style == 0){ 
         // CASO AMBOS NULOS 
             db.Products.findAll({
@@ -294,6 +329,7 @@ const productController = {
             .then(prods=>{ 
                 return res.render('products/search',{productList:prods})
             })
+            .catch(err=>log(err))
         }
     },
 
@@ -339,12 +375,21 @@ const productController = {
         }
     },
     destroy: (req, res) =>{
-        db.Image_product.findOne({where:{idproducts:req.params.id}})
-        .then(ImgP =>{
-            console.log(path.join(__dirname,`../../public/images/products/${ImgP.urlName}`))
-            fs.unlinkSync(path.join(__dirname,`../../public/images/products/${ImgP.urlName}`))
-            db.Image_product.destroy({where:{idproducts:req.params.id}})
-                .then(db.Products.destroy({where:{id: req.params.id}}))
+        //Primero eliminamos las imagenes 
+        db.Image_product.findAll({where:{idproducts:req.params.id}})
+        .then(ArrayDeImgs =>{
+            ArrayDeImgs.forEach(img=>{
+                console.log(path.join(__dirname,`../../public/images/products/${img.urlName}`))
+                fs.unlinkSync(path.join(__dirname,`../../public/images/products/${img.urlName}`))
+            })
+            //Hay que ver si se eliminan todas las imagenes 
+            db.Image_product.destroy({
+                where:{idproducts:req.params.id}
+            })
+            .then(db.Products.destroy({
+                where:{id: req.params.id}
+            }))
+            .catch(err=>log(err));
         })
     res.redirect("/products")
     }

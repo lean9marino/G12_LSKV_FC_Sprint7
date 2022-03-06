@@ -20,12 +20,6 @@ module.exports = {
       idCategory: {
         type: Sequelize.INTEGER
       },
-      idSize: {
-        type: Sequelize.INTEGER
-      },
-      idColour: {
-        type: Sequelize.INTEGER
-      },
       idStyle: {
         type: Sequelize.INTEGER
       },
@@ -34,6 +28,12 @@ module.exports = {
       },
       idStar: {
         type: Sequelize.INTEGER
+      },
+      discount:{
+        type: Sequelize.DECIMAL
+      },  
+      shipping:{
+        type: Sequelize.DECIMAL
       },
       createdAt: {
         allowNull: false,

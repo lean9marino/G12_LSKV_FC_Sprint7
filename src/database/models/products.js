@@ -19,14 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "Styles", 
         foreignKey: "idStyle" 
        }),
-      Products.belongsTo(models.Colours,{
-        as: "Colours", 
-        foreignKey: "idColour" 
-       }),
-       Products.belongsTo(models.Sizes,{
-        as: "Sizes", 
-        foreignKey: "idSize" 
-       }),
        Products.belongsTo(models.Visibility,{
         as: "Visibility", 
         foreignKey: "idVisibility" 
@@ -38,8 +30,21 @@ module.exports = (sequelize, DataTypes) => {
        Products.hasMany(models.Image_product,{
         as: "ImageProduct", 
         foreignKey: "idproducts" 
-       })
-
+       }),
+       Products.belongsToMany(models.Sizes,{
+         as: 'Sizes',
+         through:'sizes_product',
+         foreignKey:'product_id',
+         otherKey:'size_id',
+         timestamps:false
+       }),
+       Products.belongsToMany(models.Colours,{
+        as: 'Colours',
+        through:'colours_product',
+        foreignKey:'product_id',
+        otherKey:'colour_id',
+        timestamps:false
+      })
     }
   }
   Products.init({
@@ -47,11 +52,11 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     price: DataTypes.DECIMAL,
     idCategory: DataTypes.INTEGER,
-    idSize: DataTypes.INTEGER,
-    idColour: DataTypes.INTEGER,
     idStyle: DataTypes.INTEGER,
     idVisibility: DataTypes.INTEGER,
-    idStar: DataTypes.INTEGER
+    idStar: DataTypes.INTEGER,
+    discount: DataTypes.DECIMAL,
+    shipping: DataTypes.DECIMAL
   }, {
     sequelize,
     modelName: 'Products',
