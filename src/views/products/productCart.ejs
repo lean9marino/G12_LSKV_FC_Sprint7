@@ -24,47 +24,51 @@
                 </article>
             </section>
 
-            <% if (locals.product) { %>
+            <% if (locals.products) { %>
 
-            <p class="title-1-prodCart">
-                Tu carrito tiene x productos distintos
-            </p>
-
-                    <section class="det-compra">
-                        <article class="detalle-prod">
-                            <div class="imagen-prod"><img src="/images/products/<%= product['img-pr'] %> " alt="Foto del producto" class="Foto del producto"></div>
-                            <div>
-                                <h4><%= product.name %> </h4>
-                                <p>Talle <%= product.size %> </p>
-                                <div>
-                                    <form action="/" method="POST">
-                                        <label for="cant">
-                                            Cantidad:
-                                            <input type="number" id="cant" name="cant" value="<%= product.cant %>">
-                                        </label>
-                                    </form>
+                <% products.forEach(product => { %>
+                    <p class="title-1-prodCart">
+                        Tu carrito tiene x productos distintos
+                    </p>
+        
+                            <section class="det-compra">
+                                <article class="detalle-prod">
+                                    <div class="imagen-prod"><img src="/images/products/<%= product['img-pr'] %> " alt="Foto del producto" class="Foto del producto"></div>
+                                    <div>
+                                        <h4><%= product.name %> </h4>
+                                        <p>Talle <%= product.size %> </p>
+                                        <div>
+                                            <form action="/" method="POST">
+                                                <label for="cant">
+                                                    Cantidad:
+                                                    <input type="number" id="cant" name="cant" value="<%= product.cant %>">
+                                                </label>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </article>
+                
+                                <article class="precio">
+                                    <div>
+                                        <h4>PRECIO UNITARIO:</h4>
+                                        <p>AR$ <%= product.price %> </p>
+                                    </div>
+                                    <div>
+                                        <h4>TOTAL:</h4>
+                                        <p>AR$ <%= product.total %> </p>
+                                    </div>
+                                </article>
+                
+                                <article class="boton">
+                                    <button type="reset" class="style-button">Borrar</button>
+                                </article>
+                            </section>
+                                <div class="bEnv">
+                                    <button type="submit"> Siguiente </button>
                                 </div>
-                            </div>
-                        </article>
-        
-                        <article class="precio">
-                            <div>
-                                <h4>PRECIO UNITARIO:</h4>
-                                <p>AR$ <%= product.price %> </p>
-                            </div>
-                            <div>
-                                <h4>TOTAL:</h4>
-                                <p>AR$ <%= product.total %> </p>
-                            </div>
-                        </article>
-        
-                        <article class="boton">
-                            <button type="reset" class="style-button">Borrar</button>
-                        </article>
-                    </section>
-                        <div class="bEnv">
-                            <button type="submit"> Siguiente </button>
-                        </div>
+                <% }) %>
+
+            
             <% }else{ %>
                 <h4>No hay productos en el carrito</h4>
             <%} %>

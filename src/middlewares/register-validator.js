@@ -12,7 +12,7 @@ var anio = fecha.getFullYear();
 var f = new Date(anio,mes,dia); 
 
 const validator = [
-    body('user-name').notEmpty().withMessage('Debe escribir un nombre de usuario'),
+    body('userName').notEmpty().withMessage('Debe escribir un nombre de usuario'),
 
     body('name').notEmpty().withMessage('Debe escribir un nombre'),
     
@@ -36,11 +36,11 @@ const validator = [
     body('password').notEmpty().withMessage('Escriba una contraseña').bail()
         .isLength({min:6}).withMessage('Debe tener minimo 6 caracteres'), 
     
-    body('confirm-password').notEmpty().withMessage('Escriba una contraseña').bail()
+    body('confirmPassword').notEmpty().withMessage('Escriba una contraseña').bail()
         .isLength({min:6}).withMessage('Debe tener minimo 6 caracteres').bail()
         .custom((value, {req})=>{
             var pas = req.body.password; 
-            var pass = req.body['confirm-password']; 
+            var pass = req.body['confirmPassword']; 
             if (pas != pass) throw new Error('Debe poner la misma contraseña');
             return true;
         }), 

@@ -18,13 +18,14 @@ router.get('/search', productController.search);
 //Mediante res.query
 router.get('/filter', productController.filter);
 
-//router.get('/productCart' ,productController.prodCart1 );
-//router.get('/productCart2',productController.prodCart2 );
-//router.get('/productCart3',productController.prodCart3 );
-//router.get('/productCart4',productController.prodCart4 );
+router.post('/:id/prodCart',productController.prodCart)
+
+router.get('/productCart' ,productController.prodCart1 );
+router.get('/productCart2',productController.prodCart2 );
+router.get('/productCart3',productController.prodCart3 );
+router.get('/productCart4',productController.prodCart4 );
 
 router.get('/:productId', productController.prodDetail );
-//router.post('/:id/prodCart',productController.prodCart)
 
 router.put("/:id/edit",upload.fields([{name: 'image'},{name: 'images'}]), productController.prodEdition);
 router.get("/:id/edit", productController.edition);
