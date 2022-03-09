@@ -14,6 +14,7 @@ const usersController = {
     },
     session: function (req,res){
 		const resultValidation = validationResult(req);
+		log(req.body)
 		if (resultValidation.isEmpty()) {
             let usuario=undefined;
 			for (let i=0; i<users.length; i++) {
@@ -58,7 +59,7 @@ const usersController = {
 			console.log('contraEncritada:');
 			console.log(contraEncritada);
 			db.Users.create({
-				userName: req.body['userName'], 
+				userName: req.body.userName, 
 				name: req.body.name, 
 				email: req.body.email, 
 				dni: Number(req.body.dni), 

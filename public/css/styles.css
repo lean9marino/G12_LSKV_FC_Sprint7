@@ -380,6 +380,8 @@ footer{
     margin: 10px;
 }
 
+
+
 .footer-Top{
     display: flex;
     flex-wrap: wrap;
@@ -412,7 +414,7 @@ footer{
     display: flex;
     border-top: 1px solid black;
     background-color: var(--rosa);
-    color: white;
+    color:#BA135D;
     flex-direction: column;
 }
 
@@ -424,10 +426,19 @@ footer{
     font-size: 19px;
 }
 
+.footer-Buttom div.icon  a{
+    text-decoration: none;
+    color: #BA135D;
+}
+.footer-Buttom div.icon a:hover{
+    color: white;
+}
+
 .footer-Buttom article.red div.icon { 
     padding: 10px 0px;
     display: flex;
     flex-wrap: wrap;
+    
 }
 .footer-Buttom article.red div.icon i { 
     font-size: 30px;
@@ -552,7 +563,7 @@ main section .cuerpo .login .log-Red .facebook{
     text-align: center;
     padding: 3px;
     color: #fff;
-    background-color: blue;
+    background-color:black;
     border-radius: 5%;
 }
 main section .cuerpo .login .log-Red .google{

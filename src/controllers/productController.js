@@ -334,25 +334,30 @@ const productController = {
     },
 
     prodCart: function (req,res){
-        console.log(req.params.id)
-        console.log(req.body.cant)
-        let prod = [req.params.id,req.body.cant,req.body.sizes]
-        res.cookie('carrito', prod, {maxAge:60000*60*60});
-        console.log(req.cookies.carrito)  
+        console.log("id del producto ",req.params.id)
+        console.log("cantidad ",req.body.cant)
+        console.log("color ",req.body.color)
+        console.log("talle ",req.body.sizes)
+        let prod = {id:req.params.id,cant:req.body.cant,color:req.body.color,size:req.body.sizes}
+
+        if(localStorage){
+            localStorage.setItem("carrito", [prod])
+        }else{
+            let car = localStorage.getItem("carrito");
+            car.push(prod);
+            localStorage.removeItem("carrito");
+            localStorage.setItem("carrito", car);
+        }
+        
         res.redirect('/products/productCart')
     },
     prodCart1: function(req,res){
         if(req.cookies.carrito){
-            let product = productModel.find(req.cookies.carrito[0])
-            product.cant = Number(req.cookies.carrito[1])
-            product.size = req.cookies.carrito[2]
-            product.total = product.price*product.cant
-            console.log(product)
-            return res.render("products/productCart",{product})
+            let products = localStorage.getItem("carrito")
+            return res.render("products/productCart",{products})
         }else{
             return res.render("products/productCart")
         }
-        
     },
     
     prodCart2: function(req,res) {
@@ -365,11 +370,8 @@ const productController = {
     
     prodCart4: function(req,res) {
         if(req.cookies.carrito){
-            let product = productModel.find(req.cookies.carrito[0])
-            product.cant = Number(req.cookies.carrito[1])
-            product.total = product.price*product.cant
-            console.log(product)
-            return res.render("products/productCart4",{product})
+            let products = localStorage.getItem("carrito")
+            return res.render("products/productCart4",{products})
         }else{
             return res.render("products/productCart4")
         }
