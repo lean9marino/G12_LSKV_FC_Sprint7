@@ -2,14 +2,12 @@ const db = require("../database/models");
 
 const homeController = {
    index: (req,res) =>{
-        Promise.all([db.Categorys.findAll(),db.Styles.findAll()])
-        .then(arrValores=>{
-             console.log('Aca va el arr de cate y styles:\m',arrValores[0])
-             console.log('Blusa:',arrValores[0].find(e=> e.name == "Blusas").id)
+        Promise.all([db.Categories.findAll(),db.Styles.findAll()])
+        .then(([categories,styles])=>{
              return res.render("home1/home", 
              {
-                  categories : arrValores[0],
-                  styles: arrValores[1]
+                  categories ,
+                  styles
           });
         })
         .catch(err=>console.log(err));

@@ -10,10 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Colours.hasMany(models.Products,{
-        as: "ProductsColor", 
-        foreignKey: "idColour" 
-       })
+      Colours.belongsToMany(models.Products,{
+        as: 'Products',
+        through:'colours_product',
+        foreignKey:'colour_id',
+        otherKey:'product_id',
+        timestamps:false
+      })
     }
   }
   Colours.init({
@@ -22,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Colours',
+    timestamps:false
   });
   return Colours;
 };

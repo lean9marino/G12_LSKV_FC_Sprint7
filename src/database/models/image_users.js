@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Image_users',
+    timestamps:false
   });
   return Image_users;
 };

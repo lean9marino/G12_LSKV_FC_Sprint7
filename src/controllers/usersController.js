@@ -94,6 +94,7 @@ const usersController = {
 			db.Image_users.destroy({where: {idUsers:req.params.id}})
 			return res.redirect('/users');
 		})
+		.catch(err=>log(err))
 	},
 
 	list: (req,res)=>{
@@ -103,6 +104,7 @@ const usersController = {
 		.then(users =>{
 			res.render('users/usersList',{ users });
 		})
+		.catch(err=>log(err))
 	},
 
 	usuario: (req,res)=>{
@@ -113,6 +115,7 @@ const usersController = {
 		.then(user=>{
 			return res.render('users/usuario',{ element : user});
 		})
+		.catch(err=>log(err))
     }, 
 
 	edition: (req,res) =>{
@@ -123,6 +126,7 @@ const usersController = {
 		.then(user=>{
 			return res.render(`users/userEdit`,{ element : user});
 		})
+		.catch(err=>log(err))
 	}, 
 	update: (req,res)=>{
 		db.Users.update({
@@ -164,7 +168,9 @@ const usersController = {
 				}
 				res.redirect(`/users/${req.params.id}`);
 			})
+			.catch(err=>log(err))
 		})
+		.catch(err=>log(err))
 	}
 }
 

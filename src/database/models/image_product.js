@@ -14,15 +14,22 @@ module.exports = (sequelize, DataTypes) => {
       Image_product.belongsTo(models.Products,{
         as: "product", 
         foreignKey: "idproducts" 
-       })
+      }),
+      Image_product.belongsTo(models.Colours,{
+        as:'colour',
+        foreignKey: 'id'
+      })
     }
   }
   Image_product.init({
     urlName: DataTypes.STRING,
-    idproducts: DataTypes.INTEGER
+    idproducts: DataTypes.INTEGER,
+    order: DataTypes.INTEGER,
+    idColour: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Image_product',
+    timestamps:false
   });
   return Image_product;
 };    
