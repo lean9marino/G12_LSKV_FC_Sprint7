@@ -25,15 +25,15 @@
         <section class="datos">
             <form action="/users/register" method="POST" enctype="multipart/form-data">
                 <div>
-                    <label for="user-name">
+                    <label for="userName">
                         Nombre de Usuario: 
                         <input type="text" 
-                            name="user-name" 
-                            id="user-name"
-                            value="<%= locals.oldData ? oldData['user-name'] : null %>">
-                        <% if (locals.errors && errors['user-name']) { %>
+                            name="userName" 
+                            id="userName"
+                            value="<%= locals.oldData ? oldData.userName : null %>">
+                        <% if (locals.errors && errors.userName) { %>
                             <div class="text-danger" style="width: 100%">
-                                <%= errors['user-name'].msg %> 
+                                <%= errors.userName.msg %> 
                             </div>
                         <% } %>
                     </label>
@@ -67,15 +67,15 @@
                     </label>
                 </div>
                 <div>
-                    <label for="confirm-password">
+                    <label for="confirmPassword">
                         Confirmar contraseña:
                         <input type="password" 
-                            name="confirm-password" 
-                            id="confirm-password" 
-                            value="<%= locals.oldData ? oldData.password : null %>">
-                        <% if (locals.errors && errors['confirm-password']) { %>
+                            name="confirmPassword" 
+                            id="confirmPassword" 
+                            value="<%= locals.oldData ? oldData.confirmPassword : null %>">
+                        <% if (locals.errors && errors.confirmPassword) { %>
                             <div class="text-danger" style="width: 100%">
-                                <%= errors['confirm-password'].msg %> 
+                                <%= errors.confirmPassword.msg %> 
                             </div>
                         <% } %>
                     </label>
