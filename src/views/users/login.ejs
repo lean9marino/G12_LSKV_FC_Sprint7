@@ -8,56 +8,49 @@
                         <h2>¡Hola!</h2>
                         <h5>¡Hay muchos productos nuevos esperándote!</h5> 
                 <div class="cuerpo">
-                        
-                       <article class="login">
-                           
-                           <h2 class="izquierda">Iniciar sesion</h2>
-                           <h4>¿Ya eres cliente?</h4>
-                           <p>¡Bienvenido de nuevo!</p>
-                            <div class="errores">
-                                 <ul> 
-
-                                 </ul>
-                            </div>
-                           
-                          <form action="/users/login" method="POST" class="formLogin">
-                              
-                                 <div>
+                        <article class="login">
+                            <h2 class="izquierda">Iniciar sesion</h2>
+                            <h4>¿Ya eres cliente?</h4>
+                            <p>¡Bienvenido de nuevo!</p>
+                            <form action="/users/login" method="POST" class="formLogin">
+                                <div>
                                     <% if (locals.errors) { %>
-                                            <% for(let i = 0; i <errors.length; i++) { %>
-                                                <ul> <li>   <p> <%= errors[i].msg%> </p>  </li></ul>
-                                            <% } %>
+                                        <% for(let i = 0; i <errors.length; i++) { %>
+                                            <ul> <li>   <p> <%= errors[i].msg%> </p>  </li></ul>
+                                        <% } %>
                                     <% } %>
-                                   <label for="email">Correo electronico o nombre de usuario</label>
+                                    <label for="email">Correo electronico o nombre de usuario</label>
                                     <input type="text" 
                                     name="email"
                                     id= 'email'
                                     class="email">
-                              </div>
-                              <div>
-                                  <label for="password">Contraseña</label>
+                                    <br>
+                                    <div class="text-danger-email"></div>
+                                </div>
+                                <div>
+                                    <label for="password">Contraseña</label>
                                     <input type="password" 
                                     name="password"
                                     id="password" 
                                     class="password">
+                                    <br>
+                                    <div class="text-danger-password"></div>
                                 </div>
-                       
-                        
-                        <a href = "#" > ¿Has olvidado tu contraseña?</a>
-                        <button type="submit" class="style-button">Ingresar</button>
-                      </form>
-                      <section class="log-Red">
-                        <div class="facebook">
-                            <i class="fab fa-facebook-square"></i>
-                            <p>Registrarse con Facebook</p>
-                        </div>
-                        <div class="google">
-                            <i class="fab fa-google"></i>
-                            <p>Registrarse con Google</p>
-                        </div>
-                        
-                    </section>
-                    </article>
+                                <a href = "#" > ¿Has olvidado tu contraseña?</a>
+                                <button type="submit" class="style-button">Ingresar</button>
+                            </form>
+                            <section class="log-Red">
+                                <div class="facebook">
+                                    <i class="fab fa-facebook-square"></i>
+                                    <p>Registrarse con Facebook</p>
+                                </div>
+                                <div class="google">
+                                    <i class="fab fa-google"></i>
+                                    <p>Registrarse con Google</p>
+                                </div>
+                            
+                            </section>
+                        </article>
     
                     <article class="register">
                         <h2>Registrarse</h2>
