@@ -16,18 +16,12 @@
                <div class="popular-now">
                    <h1 class="tittle-popu">Popular ahora</h1>
                    <div class="btn-popu">
-                        <a href="/products/filter?category=<%=categories.find(e=>e.name=='Blusas').id%>" class="style-button">
-                            Blusas  
+                       <% for( let i = 0; i < 4; i++ ) { %>
+                        <a href="/products/filter?category=<%=categories[i].id%>" class="style-button">
+                            <%= categories[i].name %>   
                         </a>
-                        <a href="/products/filter?category=<%=categories.find(e=>e.name=='Jeans').id%>" class="style-button">
-                            Jeans 
-                        </a>
-                        <a href="/products/filter?category=<%=categories.find(e=>e.name=='Shorts').id%>" class="style-button">
-                            Shorts 
-                        </a>
-                        <a href="/products/filter?category=<%=categories.find(e=>e.name=='Vestidos').id%>" class="style-button">
-                            Vestidos 
-                        </a>
+                       <% } %>
+
                    </div>
                </div>
            </section>

@@ -2,13 +2,12 @@ window.addEventListener("load", function(){
  let form=document.querySelector("form.formLogin")
 
  form.addEventListener("submit", function(e){
-     e.preventDefault();
      let error=[];
      let email=document.querySelector("input.email")
      let password=document.querySelector("input.password")
      if (email.value == "") {
         error.push("Este campo tiene que estar completo")
-     } else if (email.value.length<=5) {
+     } else if (email.value.length<=4) {
         error.push("Este campo tiene que tener al menos 5 caracteres")
      }
 
