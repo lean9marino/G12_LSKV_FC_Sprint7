@@ -28,8 +28,8 @@ const validator = [
             }) 
             .then(user => {
                 console.log(user);
+                if( user != undefined ) throw new Error('El un email ya registrado debe ingresar otro')
             })
-            // if() throw new Error('El un email ya registrado debe ingresar otro')
             return true;
         }),
 
@@ -53,11 +53,11 @@ const validator = [
         .isDate().withMessage('Debe ser una fecha valida'),
 
     body('image').custom((value, { req }) => {
-        let file = req.file;
+        let file = req.file;  
         let acceptedExtensions = ['.jpg', '.png', '.gif'];
         if( file ) {
             let fileExtension = path.extname(file.originalname);
-            if (!acceptedExtensions.includes(fileExtension)) {
+            if (!acceptedExtensions.includes(fileExtension.toLowerCase())) {
                 throw new Error(`Las extensiones de archivo permitidas son ${acceptedExtensions.join(', ')}`);
             }
         }

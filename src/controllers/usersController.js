@@ -3,7 +3,7 @@ const path = require('path');
 const { validationResult } = require('express-validator');
 let db = require('../database/models');
 const { Op } = require("sequelize");
-const bcrypt = require('bcryptjs'); 
+const bcrypt = require('bcryptjs');
 const { connect } = require('http2');
 const log = console.log; 
 db.Users.findAll().then(res=> users = res);

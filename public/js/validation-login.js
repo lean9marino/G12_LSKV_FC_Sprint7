@@ -2,7 +2,6 @@ window.addEventListener("load", function(){
  let form=document.querySelector("form.formLogin")
 
  form.addEventListener("submit", function(e){
-     e.preventDefault();
      let error=[];
      let email=document.querySelector("input.email")
      let password=document.querySelector("input.password")

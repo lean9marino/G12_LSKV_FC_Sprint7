@@ -23,13 +23,11 @@
                           <form action="/users/login" method="POST" class="formLogin">
                               
                                  <div>
-                                     <% if (locals.errors) { %>
+                                    <% if (locals.errors) { %>
                                             <% for(let i = 0; i <errors.length; i++) { %>
-                                               
                                                 <ul> <li>   <p> <%= errors[i].msg%> </p>  </li></ul>
-                                                
                                             <% } %>
-                                        <% } %>
+                                    <% } %>
                                    <label for="email">Correo electronico o nombre de usuario</label>
                                     <input type="text" 
                                     name="email"

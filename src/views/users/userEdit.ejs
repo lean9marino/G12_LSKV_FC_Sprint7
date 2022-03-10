@@ -22,24 +22,49 @@
                 </div>
                 <div class="form-izq">
                     <label for="user-name">Nombre de Usuario </label>
-                    <input type="text" name="user-name" id="user-name" value="<%= element['userName']%>" >
+                    <input type="text" name="user-name" id="user-name" 
+                    value="<%= element['userName']%>" 
+                    class="userName">
+                    <div class="text-danger-userName"></div>
+                    
                     <label for="name">Nombre </label>
-                    <input type="text" name="name" id="name" value="<%= element.name%>">
+                    <input type="text" name="name" id="name" 
+                    value="<%= element.name%>"
+                    class="name">
+                    <div class="text-danger-name"></div>
+
                     <label for="surname">Apellido </label>
-                    <input type="text" name="surname" id="surname" value="<%=element.lastName%>">
+                    <input type="text" name="surname" id="surname" 
+                    value="<%=element.lastName%>"
+                    class="surname">
+                    <div class="text-danger-surname"></div>
                 </div>
+                
                 <div class="form-der">
                     <label for="email"> Email </label>
-                    <input type="email" name="email" id="email" value="<%=element.email%>">
+                    <input type="email" name="email" id="email" 
+                    value="<%=element.email%>"
+                    class="email">
+                    <div class="text-danger-email"></div>
+                    
                     <label for="dni"> DNI </label>
-                    <input type="number" name="dni" id="dni" value="<%=element.dni%>">
+                    <input type="number" name="dni" id="dni" 
+                    value="<%=element.dni%>"
+                    class="dni">
+                    <div class="text-danger-dni"></div>
+                    
                     <label for="fNac">Fecha de Nacimiento</label>
-                    <input type="date" name="fNac" id="fNac" value="<%=element.date_of_birth%>">
+                    <input type="date" name="fNac" id="fNac" 
+                    value="<%=element.date_of_birth%>"
+                    class="fNac">
+                    <div class="text-danger-fNac"></div>
+
                     <button type="submit" class="style-button">Guardar cambios</button>
                 </div>
                 </form>
             </div>
         </main>
         <%- include('../partials/footer') %> 
+        <script src="/js/validation-update-user.js"></script>
     </body>    
 </html>

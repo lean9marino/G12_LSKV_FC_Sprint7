@@ -1044,7 +1044,20 @@ form div.size .chk:checked + label{
     background-color: #BA135D;
     border: 2px solid black;
 }
-
+main form label div.text-danger-surname,
+main form label div.text-danger-fNac,
+main form label div.text-danger-dni,
+main form label div.text-danger-email,
+main form label div.text-danger-name,
+main form label div.text-danger-password,
+main form label div.text-danger-password2,
+main form label div.text-danger-userName,
+main.usuarios form div.text-danger-userName,
+main.usuarios form div.text-danger-name,
+main.usuarios form div.text-danger-surname,
+main.usuarios form div.text-danger-email,
+main.usuarios form div.text-danger-dni,
+main.usuarios form div.text-danger-fNac,
 main.charger form label div.text-danger { 
     color: red;
     font-size: 12px;

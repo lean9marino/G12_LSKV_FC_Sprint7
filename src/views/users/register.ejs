@@ -24,18 +24,25 @@
         </section>
         <section class="datos">
             <form action="/users/register" method="POST" enctype="multipart/form-data">
+                <div class="errores">
+                    <ul>
+                    </ul>
+                </div>
+
                 <div>
                     <label for="userName">
                         Nombre de Usuario: 
                         <input type="text" 
                             name="userName" 
                             id="userName"
+                            class="userName"
                             value="<%= locals.oldData ? oldData.userName : null %>">
                         <% if (locals.errors && errors.userName) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.userName.msg %> 
                             </div>
                         <% } %>
+                        <div class="text-danger-userName" style="width: 100%"></div>
                     </label>
                 </div>
                 <div>
@@ -44,12 +51,14 @@
                         <input type="password" 
                             name="password" 
                             id="password"
+                            class="password"
                             value="<%= locals.oldData ? oldData.password : null %>">
                         <% if (locals.errors && errors.password) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.password.msg %> 
                             </div>
                         <% } %>
+                        <div class="text-danger-password" style="width: 100%"></div>
                     </label>
                 </div>
                 <div>
@@ -58,12 +67,15 @@
                         <input type="text" 
                             name="name" 
                             id="nombre"
+                            class="name"
                             value="<%= locals.oldData ? oldData.name : null %>">
                         <% if (locals.errors && errors.name) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.name.msg %> 
                             </div>
                         <% } %>
+                        <div class="text-danger-name" style="width: 100%">
+                        </div>
                     </label>
                 </div>
                 <div>
@@ -71,13 +83,15 @@
                         Confirmar contraseña:
                         <input type="password" 
                             name="confirmPassword" 
-                            id="confirmPassword" 
+                            id="confirmPassword"
+                            class="confirmPassword"
                             value="<%= locals.oldData ? oldData.confirmPassword : null %>">
                         <% if (locals.errors && errors.confirmPassword) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.confirmPassword.msg %> 
                             </div>
                         <% } %>
+                        <div class="text-danger-password2" style="width: 100%"></div>
                     </label>
                 </div>
                 <div>
@@ -86,40 +100,49 @@
                         <input type="text" 
                             name="surname" 
                             id="apellido"
+                            class="surname"
                             value="<%= locals.oldData ? oldData.surname : null %>">
                         <% if (locals.errors && errors.surname) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.surname.msg %> 
                             </div>
                         <% } %>
+                        <div class="text-danger-surname" style="width: 100%"></div>
                     </label>
                 </div>
+
                 <div>
                     <label for="email">
                         Email:
                         <input type="email" 
                             name="email" 
                             id="email" 
+                            class="email"
                             value="<%= locals.oldData ? oldData.email : null %>">
                         <% if (locals.errors && errors.email) { %>
                             <div class="text-danger" style="width: 100%">
                                 <%= errors.email.msg %> 
+                                <ul></ul>
                             </div>
                         <% } %>
+                        <div class="text-danger-email" style="width: 100%"></div>
                     </label>
                 </div>
+
                 <div>
                     <label for="dni">
                         DNI:
                         <input type="number" 
                             name="dni" 
                             id="dni" 
+                            class="dni"
                             value="<%= locals.oldData ? oldData.dni : null %>">
                             <% if (locals.errors && errors.dni) { %>
                                 <div class="text-danger" style="width: 100%">
                                     <%= errors.dni.msg %> 
                                 </div>
                             <% } %>
+                            <div class="text-danger-dni" style="width: 100%"></div>
                     </label>
                 </div>
                 <div>
@@ -128,12 +151,15 @@
                         <input type="date" 
                             name="fNac" 
                             id="fNac"
+                            class="fNac"
                             value="<%= locals.oldData ? oldData.fNac : null %>">
                             <% if (locals.errors && errors.fNac) { %>
                                 <div class="text-danger" style="width: 100%">
                                     <%= errors.fNac.msg %> 
                                 </div>
                             <% } %>
+                            <div class="text-danger-fNac" style="width: 100%">
+                            </div>
                     </label>
                 </div>
                 <div>
@@ -161,5 +187,4 @@
     <%- include('../partials/footer') %>
     <script src="/js/validation-create-user.js"></script>
     </body>
-
 </html>
