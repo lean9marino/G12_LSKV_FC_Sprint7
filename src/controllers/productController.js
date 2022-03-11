@@ -336,20 +336,13 @@ const productController = {
     },
 
     prodCart: function (req,res){
-        console.log("id del producto ",req.params.id)
-        console.log("cantidad ",req.body.cant)
-        console.log("color ",req.body.color)
-        console.log("talle ",req.body.sizes)
+        //console.log("id del producto ",req.params.id)
+        //console.log("cantidad ",req.body.cant)
+        //console.log("color ",req.body.color)
+        //console.log("talle ",req.body.sizes)
         let prod = {id:req.params.id,cant:req.body.cant,color:req.body.color,size:req.body.sizes}
 
-        if(localStorage){
-            localStorage.setItem("carrito", [prod])
-        }else{
-            let car = localStorage.getItem("carrito");
-            car.push(prod);
-            localStorage.removeItem("carrito");
-            localStorage.setItem("carrito", car);
-        }
+        
         
         res.redirect('/products/productCart')
     },
