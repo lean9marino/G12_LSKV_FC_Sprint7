@@ -67,17 +67,15 @@ const productController = {
             Promise.all([
                 db.Categories.findAll(),
                 db.Colours.findAll(),
-                db.Sizes.findAll(),
-                db.Styles.findAll()
+                db.Sizes.findAll()
             ])
-            .then(([categories,colours,sizes,styles])=>{
+            .then(([categories,sizes,colours])=>{
                 return res.render('products/productCreate', { 
                     errors: resultValidation.mapped(), 
                     oldData: req.body,
                     categories, 
                     sizes, 
-                    colours,
-                    styles
+                    colours
                 })
             })
             .catch(err=>log(err))
