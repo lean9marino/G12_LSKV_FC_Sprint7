@@ -55,34 +55,37 @@
 
                     <p class="precio"> $<%= product.price %>  </p>
                     
-                    <form action="/products/<%= product.id %>/prodCart" method="POST">
+                    <form action="/products/<%= product.id %>/prodCart" method="POST" class="FormCarrito">
                     
                         <div class="color"> 
                             <% product.Colours.forEach(color=>{ %>
                                 <div class="check-c-s">
-                                    <input class="chk" type="checkbox" value="<%=color.id%>" name="color" id="colour<%=color.id%>">
+                                    <input class="chk pCol" type="checkbox" value="<%=color.id%>" name="color" id="colour<%=color.id%>">
                                     <label class="lbl" for = "colour<%=color.id%>">
                                         <img src = "/images/colores/<%=color.urlColour%>.jpg">
                                     </label> 
-                                </div>    
+                                </div>
+                                <div class="text-danger"></div>
                             <% }) %> 
                         </div> 
 
                         <div class="size">
                             <% product.Sizes.forEach(size=>{ %>
                                 <div class="check-size">
-                                    <input class="chk" type="checkbox" value="<%=size.id%>" name="sizes" id ="size<%=size.id%>">                                        
+                                    <input class="chk pSize" type="checkbox" value="<%=size.id%>" name="sizes" id ="size<%=size.id%>">                                        
                                     <label class="lbl" for = "size<%=size.id%>"> <%=size.name%> </label> 
                                 </div> 
                             <% }) %> 
+                            <div class="text-danger"></div>
                         </div>
+                        
 
                         <div class="cantidad">
                             <% if (user && user.idRoles != 1) { %>
                                 <label for="cant">
                                 Cantidad: 
                                 </label>
-                                <input type="number" id="cant" name="cant" min="1" value="1">
+                                <input class="pCant" type="number" id="cant" name="cant" min="1" value="1">
                                 <button type="submit" class="style-button">Agregar al carrito</button>
                             <% } %>
                         </div>
@@ -127,9 +130,7 @@
                 <% }) %> 
             </div>
         </main>
-        <script>
-            window
-        </script>
+        <script src="/js/prodDetail.js"></script>
         <%- include('../partials/footer') %> 
     </body>
 </html>

@@ -668,7 +668,7 @@ main .next{
     border-radius: 5%;
 }
 
-main .register label .text-danger{
+.text-danger{
     color: red;
     font-size: 12px;
 }
