@@ -1,31 +1,32 @@
+const log = console.log;
 window.addEventListener("load", function(){
- let form=document.querySelector("form.formLogin")
+   let emailError = document.querySelector('div.text-danger-email')
+   let email = document.querySelector('input.email'); 
+   let error_email = undefined;
+   email.addEventListener('blur',function(e){
+       if(email.value == "") {
+           error_email = ('Debe completar este campo')
+       }else { 
+           error_email = "";
+       }
+       if(error_email != undefined){
+           emailError.innerHTML = "<p>" + error_email + "</p>";
+           log('Entre en email')
+       }
+   });
 
- form.addEventListener("submit", function(e){
-     let error=[];
-     let email=document.querySelector("input.email")
-     let password=document.querySelector("input.password")
-     if (email.value == "") {
-        error.push("Este campo tiene que estar completo")
-     } else if (email.value.length<=4) {
-        error.push("Este campo tiene que tener al menos 5 caracteres")
-     }
-
-     if (password.value == "") {
-        error.push("El campo de contraseña tiene que estar completo")
-     } else if (password.value.length<=6) {
-         error.push("El campo contraseña debe tener al menos 6 caracteres")
-     }
-
-     if (error.length>0) {
-         e.preventDefault();
-          let ulError=document.querySelector("div.errores ul")
-          
-         for (let i=0; i<error.length; i++) {
-            ulError.innerHTML+= "<li>" +error[i]+ "</li>"
-             
-         }
-     }
- })
-
+   let passError = document.querySelector('div.text-danger-password');
+   let password = document.querySelector("input.password");
+   let err = undefined;
+   password.addEventListener("blur", function(e){ 
+      if(password.value == ""){ 
+         err = "Debe escribir una contraseña";
+      }else if(password.value.length < 6){ 
+         err = "Debe escribir almenos 6 caracteres";
+      }else err ="";
+      if(err != undefined) { 
+         passError.innerHTML = "<p>" + err + "</p>";
+         log("Password")
+      }
+   });
 })

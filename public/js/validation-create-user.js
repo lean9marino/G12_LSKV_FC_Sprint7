@@ -32,23 +32,19 @@ window.addEventListener("load", function(){
             passError.innerHTML = "";
             passError2.innerHTML = "";
         }
-        if( password.length < 5 ){
+        if( password.value.length < 6 ){
             log('Entre en contrasenia')
             error_password = ('La contraseña de tener almenos 6 caracteres');
             passError.innerHTML = "<p>" + error_password + "</p>";
-        } else { 
-            passError.innerHTML = "";
-        }
+        } else passError.innerHTML = "";
     })
 
     confirmPassword.addEventListener('blur',function(e){
-        if(confirmPassword.length < 5){
+        if(confirmPassword.value.length < 6){
             log('Entre en contrasenia')
             error_password = ('La contraseña de tener almenos 6 caracteres');
             passError2.innerHTML = "<p>" + error_password + "</p>";
-        }else { 
-            passError2.innerHTML ="";
-        }
+        }else passError2.innerHTML ="";
         if( password.value != confirmPassword.value ){ 
             log('Entre en contrasenia')
             error_password = ('Las contraseñas debe conincidir en ambos campos');

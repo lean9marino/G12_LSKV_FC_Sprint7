@@ -1044,6 +1044,8 @@ form div.size .chk:checked + label{
     background-color: #BA135D;
     border: 2px solid black;
 }
+main.class_login div form div.text-danger-email,
+main.class_login div form div.text-danger-password,
 main form label div.text-danger-surname,
 main form label div.text-danger-fNac,
 main form label div.text-danger-dni,
