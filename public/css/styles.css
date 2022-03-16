@@ -1060,7 +1060,15 @@ main.usuarios form div.text-danger-surname,
 main.usuarios form div.text-danger-email,
 main.usuarios form div.text-danger-dni,
 main.usuarios form div.text-danger-fNac,
-main.charger form label div.text-danger { 
+main form label div.text-danger,
+main form label div.text-danger-name,
+main form label div.text-danger-price,
+main form label div.text-danger-category,
+main form label div.text-danger-style,
+main form label div.text-danger-color,
+main form label div.text-danger-size,
+main form label div.text-danger-img,
+main form label div.text-danger-description{ 
     color: red;
     font-size: 12px;
     display: contents;

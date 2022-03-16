@@ -20,6 +20,7 @@
                                         <%= errors.name.msg %> 
                                     </div>
                                 <% } %>
+                                <div class="text-danger-name" style="width: 100%"></div>
                         </label>
                         
                         <label for="price">Precio:
@@ -33,10 +34,11 @@
                                         <%= errors.price.msg %> 
                                     </div>
                                 <% } %>
+                                <div class="text-danger-price" style="width: 100%"></div>
                         </label>
                         
                         <label for="category">Categoria: 
-                            <select name="category" id="category">
+                            <select name="category" id="category" class="category">
                                 <% categories.forEach(category => { %>
                                     <option value="<%= category.id %>"><%= category.name %></option>
                                 <% }) %>
@@ -46,20 +48,23 @@
                                     <%= errors.category.msg %> 
                                 </div>
                             <% } %>
+                            <div class="text-danger-category" style="width: 100%"></div>
                          </label>
+
                          <label for="Style">Estilos: 
-                            <select name="Style" id="Style">
+                            <select name="Style" id="Style" class="styles">
                                 <% styles.forEach(style => { %>
                                     <option value="<%= style.id %>"><%= style.name %></option>
                                 <% }) %>
                             </select>
+                            <div class="text-danger-style" style="width: 100%"></div>
                          </label>
                         
                         <label for="color">Colores:
                             <div class="color">
                                 <% colours.forEach(colour => { %>
                                     <div class="check-c-s">
-                                        <input class="chk" type="checkbox" value="<%=colour.id %>" name="color" id="colour<%=colour.id %>">
+                                        <input class="chk chk-color" type="checkbox" value="<%=colour.id %>" name="color" id="colour<%=colour.id %>">
                                         <label class="lbl" for = "colour<%=colour.id %>">
                                             <img src = "/images/colores/<%= colour.urlColour %>.jpg"">
                                         </label> 
@@ -71,13 +76,14 @@
                                     <%= errors.color.msg %> 
                                 </div>
                             <% } %>
+                            <div class="text-danger-color" style="width: 100%"></div>
                         </label>
                         
                         <label for="sizes">Talles:
                             <div class="size">
                                 <% sizes.forEach(size => { %>
                                     <div class="check-size">
-                                        <input class="chk"type="checkbox" value="<%= size.id %>"  name="sizes" id ="size<%= size.id %>">
+                                        <input class="chk chk-size" type="checkbox" value="<%= size.id %>"  name="sizes" id ="size<%= size.id %>">
                                         <label class="lbl" for = "size<%= size.id %>"> <%= size.name %></label>
                                     </div>
                                 <% }) %> 
@@ -87,21 +93,25 @@
                                     <%= errors.sizes.msg %> 
                                 </div>
                             <% } %>
+                            <div class="text-danger-size" style="width: 100%"></div>
                         </label>
 
                         <label for="image"> Ingrese la imagen principal:
                             <input type="file" 
                                 id="image" 
-                                name="image">
+                                name="image"
+                                class="imagesPrinSec">
                                 <% if (locals.errors && errors.image) { %>
                                     <div class="text-danger" style="width: 100%">
                                         <%= errors.image.msg %> 
                                     </div>
                                 <% } %>
+                                <div class="text-danger-img" style="width: 100%"></div>
                         </label>
                         
                         <label for="images">Imagenes secundarias:
-                            <input type="file" name="images" id="images" require multiple>
+                            <input type="file" name="images" id="images" class="imagesPrinSec" require multiple>
+                            <div class="text-danger-img" style="width: 100%"></div>
                         </label>
                             
                          <label for="description">Descripción:
@@ -112,9 +122,10 @@
                                 class="description"><%= locals.oldData ? oldData.description : null%></textarea>
                                 <% if (locals.errors && errors.description) { %>
                                     <div class="text-danger" style="width: 100%">
-                                        <%= errors.description.msg %> 
+                                        <%= errors.description.msg %>
                                     </div>
                                 <% } %>
+                                <div class="text-danger-description" style="width: 100%"></div>
                         </label> 
 
                         <div class="bt">
@@ -125,5 +136,6 @@
                 </form>
             </div>
         </main>
-        <%- include('../partials/footer') %> 
+        <%- include('../partials/footer') %>
+        <script src="/js/validation-create-products.js"></script>
     </body>  
