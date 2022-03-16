@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 const bcrypt = require('bcryptjs');
 const { connect } = require('http2');
 const log = console.log; 
+
 db.Users.findAll().then(res=> users = res);
 
 const usersController = {
@@ -14,6 +15,9 @@ const usersController = {
     },
     session: function (req,res){
 		const resultValidation = validationResult(req);
+		log('Resultados de Validacion BACK')
+		log(resultValidation);
+		log('Req Body')
 		log(req.body)
 		if (resultValidation.isEmpty()) {
             let usuario=undefined;
@@ -21,13 +25,12 @@ const usersController = {
 				if(users[i].email==req.body.email || users[i].userName==req.body.email ){
 					var esPass = bcrypt.compareSync(req.body.password,users[i].password);
 					if(esPass){
-						usuario=users[i];
+						usuario = users[i];
 						break;
 					}
 				}
 			}
-			if  (usuario== undefined){
-				
+			if(usuario== undefined){
 				return res.render('users/login', {errors: [
 					{msg: 'Lo sentimos, no encontramos tu cuenta'}
 				]})	

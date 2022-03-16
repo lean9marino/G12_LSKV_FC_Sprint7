@@ -1,4 +1,6 @@
+const log = console.log;
 window.addEventListener("load", function(){
+
     let name = document.querySelector('input.name')
     let nameError = document.querySelector("div.text-danger-name");
     let errorName = undefined;
@@ -8,16 +10,16 @@ window.addEventListener("load", function(){
     name.addEventListener('blur', function(e){
         if (name.value == '') {
             errorName = 'Este campo tiene que estar completo';
-        } else if (name.length <10) {
+        } else if (name.value.length <5) {
             errorName = 'Este campo tiene que tener al menos 10 caracteres';
+        } else { 
+            errorName = "";
         }
         if (errorName != undefined) {
             nameError.innerHTML = '<p>' + errorName + '</p>'
         }
     })
     
-
-
     let price = document.querySelector('input.price')
     let priceError = document.querySelector("div.text-danger-price");
     let errorPrice = undefined;
@@ -32,74 +34,73 @@ window.addEventListener("load", function(){
             priceError.innerHTML = '<p>' + errorPrice + '</p>'
         }
     })
+
+    // let category = document.querySelector('select.category')
+    // let categoryError = document.querySelector("div.text-danger-category");
+    // let errorCategory;
+
+    // category.addEventListener('submit', function(e){
+    //     if (category.value == 0 || category.value == '') {
+    //         errorCategory = 'Debe seleccionar una categoria válida';
+    //     }
+    //     if (errorCategory != undefined) {
+    //         categoryError.innerHTML = '<p>' + errorCategory + '</p>'
+    //     }
+    // })
     
 
 
-    let category = document.querySelector('select.category')
-    let categoryError = document.querySelector("div.text-danger-category");
-    let errorCategory;
+    // let style = document.querySelector('select.styles')
+    // let styleError = document.querySelector("div.text-danger-style");
+    // let errorStyle;
 
-    category.addEventListener('submit', function(e){
-        if (category.value == 0 || category.value == '') {
-            errorCategory = 'Debe seleccionar una categoria válida';
-        }
-        if (errorCategory != undefined) {
-            categoryError.innerHTML = '<p>' + errorCategory + '</p>'
-        }
-    })
-    
+    // style.addEventListener('submit', function(e) {
+    //     if (style.value == 0 || style.value == '') {
+    //         errorStyle = 'Debe seleccionar un estilo válido'
+    //     }
+    //     if (errorStyle != undefined) {
+    //         styleError.innerHTML = '<p>' + errorStyle + '</p>'
+    //     }
+    // })
 
-
-    let style = document.querySelector('select.styles')
-    let styleError = document.querySelector("div.text-danger-style");
-    let errorStyle;
-
-    style.addEventListener('submit', function(e) {
-        if (style.value == 0 || style.value == '') {
-            errorStyle = 'Debe seleccionar un estilo válido'
-        }
-        if (errorStyle != undefined) {
-            styleError.innerHTML = '<p>' + errorStyle + '</p>'
-        }
-    })
-   
+    // let color = document.querySelector('input.chk')
+    // let colorError = document.querySelector("div.text-danger-color");
+    // let errorColor = undefined;
+    // log('Color: ',color);
+    // color.addEventListener('change', function(e){
+    //     log('Color: ',color);
+    //     if (!color.value.checked){
+    //         errorColor = 'Debe seleccionar un color válido'
+    //     }
+    //     if (errorColor != undefined) {
+    //         colorError.innerHTML = '<p>' + errorColor + '</p>'
+    //     }
+    // })
 
 
-    let color = document.querySelector('input.chk-color')
-    let colorError = document.querySelector("div.text-danger-color");
-    let errorColor = undefined;
+    // let size = document.querySelector('input.chk-size')
+    // let sizeError = document.querySelector("div.text-danger-size");
+    // let errorSize = undefined;
 
-    color.addEventListener('blur', function(e){
-        if (!color.value.checked){
-            errorColor = 'Debe seleccionar un color válido'
-        }
-        if (errorColor != undefined) {
-            colorError.innerHTML = '<p>' + errorColor + '</p>'
-        }
-    })
-
-
-    let size = document.querySelector('input.chk-size')
-    let sizeError = document.querySelector("div.text-danger-size");
-    let errorSize = undefined;
-
-    size.addEventListener('blur', function(e){
-        if (!size.value.checked){
-            errorSize = 'Debe seleccionar un talle válido'
-        }
-        if (errorSize != undefined) {
-            sizeError.innerHTML = '<p>' + errorSize + '</p>'
-        }
-    })
+    // size.addEventListener('blur', function(e){
+    //     if (!size.value.checked){
+    //         errorSize = 'Debe seleccionar un talle válido'
+    //     }
+    //     if (errorSize != undefined) {
+    //         sizeError.innerHTML = '<p>' + errorSize + '</p>'
+    //     }
+    // })
     
 
     let image = document.querySelector('input.imagesPrinSec')
     let imageError = document.querySelector("div.text-danger-img");
     let errorImage = undefined;
-
+    log('image', image)
     image.addEventListener('blur', function(e){
-        if (image.value == null){
+        if (image.value == ""){
             errorImage = 'Debe seleccionar una imagen'
+        }else {
+            errorImage = "";
         }
         if (errorImage != undefined) {
             imageError.innerHTML = '<p>' + errorImage + '</p>'
@@ -110,14 +111,16 @@ window.addEventListener("load", function(){
     let description = document.querySelector('textarea.description')
     let descError = document.querySelector("div.text-danger-description");
     let errorDesc = undefined;
-
-    if (description.value == '') {
-        errorDesc = 'Este campo tiene que estar completo'
-    } else if (description.length <=15) {
-        errorDesc = 'Este campo tiene que tener al menos 15 caracteres'
-    }
-    if (errorDesc != undefined) {
-        descError.innerHTML = '<p>' + errorDesc + '</p>'
-    }
+    description.addEventListener('blur',function(e){
+        if (description.value == '') {
+            errorDesc = 'Este campo tiene que estar completo'
+        } else if (description.value.length <= 30) {
+            errorDesc = 'Este campo tiene que tener al menos 15 caracteres'
+        }else errorDesc = "";
+        
+        if (errorDesc != undefined) {
+            descError.innerHTML = '<p>' + errorDesc + '</p>'
+        }
+    })
  
 })
