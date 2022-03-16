@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const { connect } = require('http2');
 const log = console.log; 
 
-db.Users.findAll().then(res=> users = res);
+
 
 const usersController = {
     login: function(req,res) {
@@ -21,23 +21,26 @@ const usersController = {
 		log(req.body)
 		if (resultValidation.isEmpty()) {
             let usuario=undefined;
-			for (let i=0; i<users.length; i++) {
-				if(users[i].email==req.body.email || users[i].userName==req.body.email ){
-					var esPass = bcrypt.compareSync(req.body.password,users[i].password);
-					if(esPass){
-						usuario = users[i];
-						break;
+			db.Users.findAll()
+			.then(users=> {
+				for (let i=0; i<users.length; i++) {
+					if(users[i].email==req.body.email || users[i].userName==req.body.email ){
+						var esPass = bcrypt.compareSync(req.body.password,users[i].password);
+						if(esPass){
+							usuario = users[i];
+							break;
+						}
 					}
 				}
-			}
-			if(usuario== undefined){
-				return res.render('users/login', {errors: [
-					{msg: 'Lo sentimos, no encontramos tu cuenta'}
-				]})	
-			}
-			console.log(usuario)
-			req.session.a=usuario;
-			res.redirect(`/users/${req.session.a.id}`)
+				if(usuario== undefined){
+					return res.render('users/login', {errors: [
+						{msg: 'Lo sentimos, no encontramos tu cuenta'}
+					]})	
+				}
+				console.log(usuario)
+				req.session.a=usuario;
+				res.redirect(`/users/${req.session.a.id}`)
+			});
 		}else {
 			return res.render("users/login", {errors: resultValidation.errors})
 		}
