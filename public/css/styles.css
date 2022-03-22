@@ -813,7 +813,7 @@ main div.colors a{
     padding: 2px 5px;
 }
 main div.colors a i{ 
-    transition: font-size 450ms;
+    /* transition: font-size 450ms; */
     box-shadow: 0px 0px 5px rgb(100, 100, 100,50%);
     border-radius: 50%;
 }
@@ -1012,12 +1012,12 @@ form div.check-c-s .lbl img{
     height: 33px;
     border-radius: 100%;
     cursor: pointer;
-    transition: 200ms;
+    /* transition: 200ms; */
 }
-form div.check-c-s .lbl img:hover{
+/* form div.check-c-s .lbl img:hover{
     width: 40px;
     height: 40px;
-}
+} */
 form div.check-c-s .chk{
    display: none;
 
@@ -1060,7 +1060,15 @@ main.usuarios form div.text-danger-surname,
 main.usuarios form div.text-danger-email,
 main.usuarios form div.text-danger-dni,
 main.usuarios form div.text-danger-fNac,
-main.charger form label div.text-danger { 
+main form label div.text-danger,
+main form label div.text-danger-name,
+main form label div.text-danger-price,
+main form label div.text-danger-category,
+main form label div.text-danger-style,
+main form label div.text-danger-color,
+main form label div.text-danger-size,
+main form label div.text-danger-img,
+main form label div.text-danger-description{ 
     color: red;
     font-size: 12px;
     display: contents;

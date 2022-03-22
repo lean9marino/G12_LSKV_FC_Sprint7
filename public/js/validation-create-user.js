@@ -111,9 +111,9 @@ window.addEventListener("load", function(){
     DNI.addEventListener('blur',function(e){
         if(String(DNI.value) == "") {
             error_DNI = 'Debe completar este campo';
-        }else { 
-            error_DNI = "" ;
-        }
+        }else if(String(DNI.value).length <= 6){ 
+            error_DNI = "Debe tener almenos 6 numeros" ;
+        }else error_DNI = ""
         if(error_DNI != undefined){
             dniError.innerHTML = "<p>" + error_DNI + "</p>";
             log('Entre en DNI')

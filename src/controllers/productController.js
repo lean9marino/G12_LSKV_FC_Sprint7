@@ -70,9 +70,9 @@ const productController = {
                     errors: resultValidation.mapped(), 
                     oldData: req.body,
                     categories, 
-                    sizes, 
-                    colours,
-                    styles
+                    sizes,
+                    styles, 
+                    colours
                 })
             })
             .catch(err=>log(err))

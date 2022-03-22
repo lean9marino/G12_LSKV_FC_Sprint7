@@ -13,12 +13,15 @@
                             <h4>¿Ya eres cliente?</h4>
                             <p>¡Bienvenido de nuevo!</p>
                             <form action="/users/login" method="POST" class="formLogin">
-                                <div>
-                                    <% if (locals.errors) { %>
+                                <div >
+                                    <div class="text-danger">
+                                      <% if (locals.errors) { %>
                                         <% for(let i = 0; i <errors.length; i++) { %>
                                             <ul> <li>   <p> <%= errors[i].msg%> </p>  </li></ul>
                                         <% } %>
-                                    <% } %>
+                                    <% } %>  
+                                    </div>
+                                    
                                     <label for="email">Correo electronico o nombre de usuario</label>
                                     <input type="text" 
                                     name="email"
