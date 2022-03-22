@@ -94,7 +94,7 @@ const usersController = {
 		db.Users.destroy({where: {id:req.params.id}})
 		db.Image_users.findOne({where:{idUsers:req.params.id}})
 		.then(imgU=>{
-			fs.unlinkSync(path.join(__dirname,`../../public/images/users/${imgU.url_name}`))
+			if( String(imgU.url_name) != "default.png" ) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${imgU.url_name}`))
 			db.Image_users.destroy({where: {idUsers:req.params.id}})
 			return res.redirect('/users');
 		})
@@ -117,7 +117,13 @@ const usersController = {
 				include:[{association: 'image_users'}]
 			})
 		.then(user=>{
-			return res.render('users/usuario',{ element : user});
+			let f = user.date_of_birth; 
+			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
+			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
+			let year = String(f.getFullYear()+1).length > 1 ? `${f.getFullYear()+1}` : `0${f.getFullYear()+1}`; 
+			let fecha = `${year}-${month}-${day}`;
+			log('fecha', fecha)
+			return res.render(`users/usuario`,{ element : user, fecha})
 		})
 		.catch(err=>log(err))
     }, 
@@ -128,13 +134,37 @@ const usersController = {
 				include:[{association: 'image_users'}]
 			})
 		.then(user=>{
-			return res.render(`users/userEdit`,{ element : user});
+			let f = user.date_of_birth; 
+			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
+			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
+			let year = String(f.getFullYear()+1).length > 1 ? `${f.getFullYear()+1}` : `0${f.getFullYear()+1}`; 
+
+			let fecha = `${year}-${month}-${day}`;
+			log('fecha', fecha)
+			return res.render(`users/userEdit`,{ element : user, fecha })
 		})
 		.catch(err=>log(err))
-	}, 
-	update: (req,res)=>{
+	},
+
+	update: async (req,res)=>{
+		const resultValidation = validationResult(req);
+		log('Aca va el file: ');
+		log(req.file);
+		let user = await db.Users.findOne({
+			where: {id: req.params.id},
+			include:['image_users']
+		});
+		log(resultValidation.errors.length > 0);
+		if (resultValidation.errors.length > 0) {
+			log(user);
+			return res.render(`users/userEdit`, {
+				errors: resultValidation.mapped(),
+				oldData: req.body, 
+				element: user
+			});
+		}else{
 		db.Users.update({
-			userName: req.body['user-name'], 
+			userName: req.body.userName, 
 			name: req.body.name, 
 			email: req.body.email, 
 			dni: Number(req.body.dni), 
@@ -150,31 +180,34 @@ const usersController = {
 			log('Aca va File: '); 
 			log(req.file); 
 			db.Image_users.findOne({
-				where:{
-					idUsers:user.id
-				}
+				where:{ idUsers: req.params.id }
 			})
 			.then(img=>{
-				if(req.file){
-					if(img != null) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${img.url_name}`)); 
+				log(String(img.url_name));
+				log(req.file)
+				if(req.file != undefined){
+					log('Entre a RE')
 					db.Image_users.update({
 						url_name:req.file.filename
 					},{
-						where:{idUsers:user.id}
+						where:{idUsers : req.params.id}
 					})
-				}else if(req.body['img-default'] == 'on'){
-					if(img != null) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${img.url_name}`)); 
-				}else { 
-					db.Image_users.create({
-						url_name:req.file.filename,
-						idUsers: user.id
+					if( String(img.url_name) != "default.png" ) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${img.url_name}`)); 
+				}else if(req.body['img-default'] == 'on' ){
+					log('Entre al else')
+					db.Image_users.update({
+						url_name: "default.png"						
+					},{
+						where: { idUsers: req.params.id }
 					})
+					if( String(img.url_name) != "default.png" ) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${img.url_name}`)); 
 				}
 				res.redirect(`/users/${req.params.id}`);
 			})
 			.catch(err=>log(err))
 		})
 		.catch(err=>log(err))
+		}
 	}
 }
 

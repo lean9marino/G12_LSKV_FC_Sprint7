@@ -12,10 +12,8 @@ router.get('/', productController.list);
 router.get('/create',productController.create);
 router.post('/',upload.fields([{name: 'image'},{name: 'images'}]), validatorProd, productController.store);
 
-//category, style, search
 router.get('/search', productController.search);
 
-//Mediante res.query
 router.get('/filter', productController.filter);
 
 router.post('/:id/prodCart',productController.prodCart)
