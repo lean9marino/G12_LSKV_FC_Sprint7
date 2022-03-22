@@ -1,9 +1,8 @@
 const {body} = require('express-validator'); 
 const path = require('path');
-//const jsonDB = require('../model/jsonUsersDataBase');
-//const userModel = jsonDB('usersDataBase'); 
 var db = require('../database/models');
 const { Op } = require("sequelize");
+const log = console.log; 
 
 var fecha = new Date(); 
 var mes = fecha.getMonth() + 1;  
@@ -12,7 +11,17 @@ var anio = fecha.getFullYear();
 var f = new Date(anio,mes,dia); 
 
 const validator = [
-    body('userName').notEmpty().withMessage('Debe escribir un nombre de usuario'),
+    body('userName').notEmpty().withMessage('Debe escribir un nombre de usuario').bail()
+        .isLength({min:3}).withMessage('Debe tener minimo 3 caracteres').bail()
+        .custom( async (value,{req})=>{
+            let user = await db.Users.findOne({
+                where:{
+                    userName : req.body.userName
+                }
+            })
+            if(user != undefined) throw new Error('Elija otro nombre de Usuario');
+            return true 
+        }), 
 
     body('name').notEmpty().withMessage('Debe escribir un nombre'),
     
@@ -20,16 +29,18 @@ const validator = [
     
     body('email').notEmpty().withMessage('Debes escribir un correo electrónico').bail()
         .isEmail().withMessage('Debes escribir un formato de correo válido').bail()
-        .custom((value, {req})=>{
-            db.Users.findOne({
+        .custom(async (value, {req})=>{
+            log('Entre a email-validator REGISTER');
+            let user = await db.Users.findOne({
                 where:{
                     email:req.body.email
                 }
-            }) 
-            .then(user => {
-                console.log(user);
-                if( user != undefined ) throw new Error('El un email ya registrado debe ingresar otro')
             })
+            //.then(user => {
+            console.log(user);
+            if( user != undefined ) throw new Error('El un email ya registrado debe ingresar otro')
+            //})
+            //.catch(err=>log(err));
             return true;
         }),
 

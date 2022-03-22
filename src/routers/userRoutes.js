@@ -3,9 +3,10 @@ const router = express.Router();
 
 const usersController = require('../controllers/usersController.js');
 const upload = require('../middlewares/img-users');
+
 const validations = require('../middlewares/register-validator'); 
 
-const validatorLogin=require('../middlewares/login-validator');
+const validatorLogin = require('../middlewares/login-validator');
 
 router.get('/', usersController.list); 
 router.delete('/:id',usersController.delete );

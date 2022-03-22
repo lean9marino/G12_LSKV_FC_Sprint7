@@ -7,8 +7,6 @@ const bcrypt = require('bcryptjs');
 const { connect } = require('http2');
 const log = console.log; 
 
-
-
 const usersController = {
     login: function(req,res) {
 		res.render('users/login')
@@ -50,15 +48,15 @@ const usersController = {
     },
 	store: function(req, res){
 		const resultValidation = validationResult(req);
-		console.log('Aca va el file: ');
-		console.log(req.file);
-		console.log(resultValidation.errors)
+		log('Aca va el file: ');
+		log(req.file);
+		log(resultValidation.errors.length > 0);
 		if (resultValidation.errors.length > 0) {
 			return res.render('users/register', {
 				errors: resultValidation.mapped(),
 				oldData: req.body
 			});
-		}else {
+		}else{
 			console.log('Aca va el BODY: ')
 			console.log(req.body);
 			const contraEncritada = bcrypt.hashSync(req.body.password,10); 
@@ -86,9 +84,9 @@ const usersController = {
 						idUsers: user.id
 					})
 				}
+				return res.redirect(`/`);
 			})
 			.catch(err=>log(err));
-			return res.redirect(`/`);
 		}
 	},
 
