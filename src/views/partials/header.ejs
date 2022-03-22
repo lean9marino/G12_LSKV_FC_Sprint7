@@ -26,6 +26,9 @@
                     <a href="/products/productCart"><i class="fas fa-shopping-bag"></i></a>
                 <% } %> 
                 <% if (user) { %> 
+                    <% if (user && user.idRoles == 1) { %>
+                        <a href="/users">UserList</a>
+                    <% } %>
                     <a href="/users/<%= user.id %> "><i class="fas fa-user"></i></a>
                 <% } %> 
                     
