@@ -64,13 +64,8 @@ const productController = {
         const resultValidation = validationResult(req); 
         console.log(resultValidation.errors);
         if(resultValidation.errors.length > 0 ){ 
-            Promise.all([
-                db.Categories.findAll(),
-                db.Colours.findAll(),
-                db.Sizes.findAll(),
-                db.Styles.findAll()
-            ])
-            .then(([categories,colours,sizes,styles])=>{
+            Promise.all([db.Categories.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll()])
+            .then(([categories,sizes,styles,colours])=>{
                 return res.render('products/productCreate', { 
                     errors: resultValidation.mapped(), 
                     oldData: req.body,
@@ -340,6 +335,7 @@ const productController = {
         //console.log("cantidad ",req.body.cant)
         //console.log("color ",req.body.color)
         //console.log("talle ",req.body.sizes)
+        console.log(localStorage.getItem("carrito"))
         let prod = {id:req.params.id,cant:req.body.cant,color:req.body.color,size:req.body.sizes}
 
         

@@ -27,7 +27,6 @@ window.addEventListener("load", function(){
     let price = document.querySelector(".precio").innerHTML
 
 
-
     form.addEventListener("submit",(e)=>{
         divS.innerHTML = ""
         divC.innerHTML = ""

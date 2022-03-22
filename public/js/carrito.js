@@ -1,10 +1,10 @@
 const log = console.log;
 window.addEventListener("load", function(){
-
+    log(localStorage.getItem("carrito"))
 
     if(localStorage.getItem('carrito') == null){
-        let caja = document.querySelector(".det-compra")
-        caja.style.display = "none";
+        document.querySelector(".det-compra").style.display = "none";
+        document.querySelector(".bEnv").style.display = "none";
 
     }else{
         let Store=JSON.parse(localStorage.getItem('carrito'));
@@ -17,10 +17,5 @@ window.addEventListener("load", function(){
         document.querySelector(".price").innerHTML += Store.price
         document.querySelector(".total").innerHTML += Store.price
     }
-
-
-    
-
-    
 
 })
