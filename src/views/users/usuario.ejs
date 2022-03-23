@@ -11,10 +11,10 @@
                     <img src=/images/users/<%=element.image_users[0].url_name%>>                         
                 </div>
                 <div class="datos-user">
-                    <p><span class="negrita">Usuario:</span> <%= element['userName'] %></p>
+                    <p><span class="negrita">Usuario:</span> <%= element.userName %></p>
                     <p><span class="negrita">Nombre y apellido:</span> <%=element.name %> <%= element.surname %></p>
                     <p><span class="negrita">Email:</span> <%=element.email %></p>
-                    <p><span class="negrita">Fecha de nacimiento:</span><%=element.date_of_birth%></p>
+                    <p><span class="negrita">Fecha de nacimiento:</span><%=fecha%></p>
                     <form action="/users/<%=element.id%>/edit">
                         <button type="submit" class="style-button">Editar perfil</button>
                     </form>

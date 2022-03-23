@@ -22,41 +22,72 @@
                 </div>
                 <div class="form-izq">
                     <label for="user-name">Nombre de Usuario </label>
-                    <input type="text" name="user-name" id="user-name" 
-                    value="<%= element['userName']%>" 
+                    <input type="text" name="userName" id="user-name" 
+                    value="<%= locals.oldData ? oldData.userName : element.userName%>" 
                     class="userName">
+                    <% if (locals.errors && errors.userName) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.userName.msg %> 
+                        </div>
+                    <% } %>
                     <div class="text-danger-userName"></div>
                     
                     <label for="name">Nombre </label>
                     <input type="text" name="name" id="name" 
-                    value="<%= element.name%>"
+                    value="<%= locals.oldData ? oldData.name : element.name%>"
                     class="name">
+                    <% if (locals.errors && errors.name) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.name.msg %> 
+                        </div>
+                    <% } %>
                     <div class="text-danger-name"></div>
-
+                    
                     <label for="surname">Apellido </label>
                     <input type="text" name="surname" id="surname" 
-                    value="<%=element.lastName%>"
+                    value="<%=locals.oldData ? oldData.surname : element.lastName%>"
                     class="surname">
+                    <% if (locals.errors && errors.surname) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.surname.msg %> 
+                        </div>
+                    <% } %>
                     <div class="text-danger-surname"></div>
                 </div>
                 
                 <div class="form-der">
                     <label for="email"> Email </label>
                     <input type="email" name="email" id="email" 
-                    value="<%=element.email%>"
+                    value="<%=locals.oldData ? oldData.email : element.email%>"
                     class="email">
+                    <% if (locals.errors && errors.email) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.email.msg %> 
+                            <ul></ul>
+                        </div>
+                    <% } %>
                     <div class="text-danger-email"></div>
                     
                     <label for="dni"> DNI </label>
                     <input type="number" name="dni" id="dni" 
-                    value="<%=element.dni%>"
+                    value="<%=locals.oldData ? oldData.dni : element.dni%>"
                     class="dni">
+                    <% if (locals.errors && errors.dni) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.dni.msg %> 
+                        </div>
+                    <% } %>
                     <div class="text-danger-dni"></div>
                     
                     <label for="fNac">Fecha de Nacimiento</label>
                     <input type="date" name="fNac" id="fNac" 
-                    value="<%=element.date_of_birth%>"
+                    value="<%=locals.oldData ? oldData.fNac : fecha%>"
                     class="fNac">
+                    <% if (locals.errors && errors.fNac) { %>
+                        <div class="text-danger" style="width: 100%">
+                            <%= errors.fNac.msg %> 
+                        </div>
+                    <% } %>
                     <div class="text-danger-fNac"></div>
 
                     <button type="submit" class="style-button">Guardar cambios</button>

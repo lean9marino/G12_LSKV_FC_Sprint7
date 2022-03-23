@@ -1,19 +1,19 @@
 const {body} = require('express-validator'); 
 const path = require('path');
 var db = require('../database/models');
-const { Op } = require("sequelize");
 const log = console.log; 
+const { Op } = require("sequelize");
 
 const validator = [
     body('userName').notEmpty().withMessage('Debe escribir un nombre de usuario').bail()
         .isLength({min:3}).withMessage('Debe tener minimo 3 caracteres').bail()
         .custom( async (value,{req})=>{
             let user = await db.Users.findOne({
-                where:{
-                    userName : req.body.userName
+                where:{userName : req.body.userName, 
+                    [Op.not]:[{id:req.params.id}]    
                 }
             })
-            if(user != undefined) throw new Error('Elija otro nombre de Usuario');
+            if(user != undefined ) throw new Error('Elija otro nombre de Usuario');
             return true 
         }), 
 
@@ -27,24 +27,13 @@ const validator = [
             log('Entre a email-validator REGISTER');
             let user = await db.Users.findOne({
                 where:{
-                    email:req.body.email
+                    email:req.body.email,
+                    [Op.not]:[{id:req.params.id}]
                 }
             })
             if( user != undefined ) throw new Error('Email ya registrado debe ingresar otro')
             return true;
         }),
-
-    body('password').notEmpty().withMessage('Escriba una contraseña').bail()
-        .isLength({min:6}).withMessage('Debe tener minimo 6 caracteres'), 
-    
-    body('confirmPassword').notEmpty().withMessage('Escriba una contraseña').bail()
-        .isLength({min:6}).withMessage('Debe tener minimo 6 caracteres').bail()
-        .custom((value, {req})=>{
-            var pas = req.body.password; 
-            var pass = req.body['confirmPassword']; 
-            if (pas != pass) throw new Error('Debe poner la misma contraseña');
-            return true;
-        }), 
 
     body('dni').notEmpty().withMessage('Debe un DNI').bail()
         .isLength({min:7, max:9}).withMessage('Escriba un DNI valido'),
