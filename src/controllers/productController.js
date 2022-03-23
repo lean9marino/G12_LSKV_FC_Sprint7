@@ -149,8 +149,6 @@ const productController = {
             db.Sizes.findAll()
         ])
         .then(([product,styles,categories,colours,size]) => {
-            let colour = colours[0]
-            log('colors',product.Colours.find(e=>e.id==colour.id));
             return res.render("products/productEdition", { product,styles,categories,colours,size });
         })
         .catch(err => console.log("producto",err));
@@ -172,54 +170,110 @@ const productController = {
                 if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
                 console.log('Aca va Files: ');
                 console.log(req.files);
-                if (req.files.image){
-                    fs.unlinkSync(path.join(__dirname,`../../public/images/products/${imgP.urlName}`))
-                    imgP = req.files.image[0].filename;
-                }
-                if (req.files.images){
-                    product['img-se'].forEach(img => {
-                        if ( ! imgSecArray.find( imagen => imagen ==  img) ){
-                            console.log("Elimina la imagen", img )
-                            fs.unlinkSync(path.join(__dirname,`../../public/images/products/${img}`))
-                        }
-                    });
-                    for(let i =0; i < req.files.images.length; i++) imgSecArray.push(req.files.images[i].filename);
-                }
                 console.log('Aca va BODY: ');
                 console.log(req.body);
-                db.Products.update(
-                {
-                    name: req.body.name,
-                    price: Number(req.body.price),
-                    description: req.body.description, 
-                    idStar: 1,
-                    idCategory: req.body.category,
-                    idStyles: req.body.Style,
-                    idColour: colorArray[0],
-                    idSize: sizesArray[0]
-                },
-                {
-                    where: {id: product.id}
-                })
-                .then(()=>{
-                    db.Image_product.update({
-                        urlName: imgP,
-                        idproducts: product.id
-                    },
-                    {
-                        where: {idproducts: product.id}
+                const resultValidation = validationResult(req); 
+                let filenamesImgSec = [];
+                if(req.files.images){ 
+                    for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
+                }
+                console.log(resultValidation.errors);
+                if(resultValidation.errors.length > 0 ){ 
+                    Promise.all([db.Categories.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll()])
+                    .then(([categories,sizes,styles,colours])=>{
+                        return res.render('products/productCreate', { 
+                            errors: resultValidation.mapped(), 
+                            oldData: req.body,
+                            categories, 
+                            sizes,
+                            styles, 
+                            colours
+                        })
                     })
-                    .then(resImg=>{
-                            console.log("imagen",resImg)
-                            res.redirect(`/products/${req.params.id}`);
-                    })
-                    .catch(err => log(err))
-                })
-                .catch(err => console.log("imagen",err))
+                    .catch(err=>log(err))
+                }else{
+                    db.Products.update(
+                        {
+                            name: req.body.name,
+                            price: Number(req.body.price),
+                            description: req.body.description, 
+                            idStar: 1,
+                            idCategory: req.body.category,
+                            idStyle: req.body.Style,
+                            discount: 0, 
+                            shipping: 0,
+                        },
+                        {
+                            where: {id: req.params.id}
+                        })
+                        .then(()=>{//destruccion de tablas intermedias
+                            db.colours_product.destroy({where:{
+                                product_id:req.params.id
+                            }})
+                            .then(()=>{// creacion de las a partir de los datos dentro de las arrays del form
+                                colorArray.forEach(colour=>{
+                                    db.colours_product.create({
+                                        product_id:req.params.id, 
+                                        colour_id: colour
+                                    })
+                                    .catch(err=>log(err)); 
+                                })
+                            })
+
+                            db.sizes_product.destroy({where:{
+                                product_id:req.params.id
+                                }})
+                                .then(()=>{
+                                sizesArray.forEach(size=>{
+                                    db.sizes_product.create({
+                                        product_id:req.params.id,
+                                        size_id: size
+                                    })
+                                    .then()
+                                    .catch(err=>log(err)); 
+                                })
+                            })
+                        })
+                        .then(()=>{//imagenes Secundarias
+                            imgSecArray.forEach(imgSec=>{
+                                db.Image_product.findByPk(imgSec)
+                                .then((imgS)=>{
+                                    fs.unlinkSync(path.join(__dirname,`../../public/images/products/${imgS.urlName}`))
+                                    db.Image_product.destroy({where:{
+                                        id:imgSec
+                                    }}).catch((err)=>console.log("Destroy imgSec",err))
+                                })
+                            })
+                            filenamesImgSec.forEach((img,i,arr)=>{
+                                db.Image_product.create({
+                                    urlName: img,
+                                    idproducts: req.params.id,
+                                    order: i + 2
+                                })
+                                .then(valor=>log(valor))
+                                .catch(err => log(err));
+                            })
+                        })
+                        .then(()=>{
+                            if (req.files.image){
+                                db.Image_product.findOne({where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})//busqueda de la imagen principal
+                                .then((imgPV)=>{
+                                    console.log("ImagenP vieja",imgPV)
+                                    fs.unlinkSync(path.join(__dirname,`../../public/images/products/${imgPV.urlName}`))//imagenP vieja eliminacion local
+                                    db.Image_product.update({//cambiando el urlname de la img principal
+                                        urlName: req.files.image[0].filename,
+                                    },{where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}}).catch((err)=> "ImgP update",err)
+                                })
+                              }
+                        })
+                        .catch(err => console.log("imagen",err))
+                }
+                
             })
             .catch(err => log("imagen",err))
         })
         .catch(err => log("producto",err))
+        return res.redirect('/products') 
     },
 
     filter: (req,res)=>{ 
