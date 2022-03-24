@@ -14,7 +14,7 @@
                         <label for="name">Nombre
                             <input type="text" 
                             id = "name" 
-                            value="<%=product.name %>" 
+                            value="<%= locals.oldData ? oldData.name : product.name%>" 
                             name="name"
                             class="name">
                             <div class="text-danger-name" style="width: 100%"></div>
@@ -24,7 +24,7 @@
                             <input type="number" 
                             id="price" 
                             name="price" 
-                            value="<%=product.price %>"
+                            value="<%= locals.oldData ? oldData.price : product.price %>"
                             class="price">
                             <div class="text-danger-price" style="width: 100%"></div>
                         </label>
@@ -32,11 +32,13 @@
                         <label for="category">Categoria:
                             <select name="category" id="category" class="category">
                                 <% categories.forEach(category => { %>
-                                    <% if(category.id == product.idCategory){ %>
+                                    <% if ( !locals.oldData && category.id == product.idCategory){ %>
                                         <option value="<%=category.id%>" selected><%= category.name%></option>
-                                    <% }else{ %>
+                                    <% }else if(locals.oldData && category.id == oldData.category){ %>
+                                        <option value="<%=category.id%>" selected><%= category.name%></option>
+                                    <% }else{%>
                                         <option value="<%=category.id%>"><%= category.name %></option>
-                                    <% } %>   
+                                    <%} %>   
                                 <% }) %>
                             </select>
                             <div class="text-danger-category" style="width: 100%"></div>
@@ -45,8 +47,10 @@
                          <label for="Style">Estilos: 
                             <select name="Style" id="Style" class="styles">
                                 <% styles.forEach(style => { %>
-                                    <% if(style.id == product.idStyle){%>
+                                    <% if(!locals.oldData && style.id == product.idStyle){%>
                                         <option value="<%=style.id%>" selected><%= style.name %></option>
+                                    <% }else if(locals.oldData && style.id == oldData.style){ %>
+                                        <option value="<%=style.id%>" selected><%= style.name%></option>
                                     <% }else{ %>
                                         <option value="<%=style.id%>"><%= style.name %></option> 
                                     <% } %> 
@@ -59,7 +63,7 @@
                             <div class="color">
                                 <% colours.forEach(colour=>{ %>
                                     <div class="check-c-s">
-                                    <% if(product.Colours.find(e=>e.id==colour.id) != undefined){ %>
+                                    <% if(!locals.oldData && product.Colours.find(e=>e.id==colour.id) != undefined){ %>
                                         <input class="chk chk-color" 
                                         type="checkbox"
                                         value='<%=colour.id%>' 
@@ -68,7 +72,18 @@
                                         <label class="lbl" for = "colour<%=colour.id %>">
                                             <img src = "/images/colores/<%= colour.urlColour %>.jpg">
                                         </label>
-                                    <% }else{ %> 
+                                    
+                                        <% } else if(locals.oldData && oldData.color.find(e=>e.id==colour.id) != undefined ) { %>
+                                        <input class="chk chk-color" 
+                                        type="checkbox"
+                                        value='<%=colour.id%>' 
+                                        name="color" 
+                                        id="colour<%=colour.id %>" checked>
+                                        <label class="lbl" for = "colour<%=colour.id %>">
+                                            <img src = "/images/colores/<%= colour.urlColour %>.jpg">
+                                        </label>
+                                    
+                                        <% }else{ %> 
                                         <input class="chk chk-color" type="checkbox" value="<%=colour.id %>" name="color" id="colour<%=colour.id %>">
                                         <label class="lbl" for = "colour<%=colour.id %>">
                                             <img src = "/images/colores/<%= colour.urlColour %>.jpg">
@@ -82,9 +97,9 @@
                         
                         <label>Talles:
                             <div class="size">
-                                <% size.forEach(size => { %>
+                                <% sizes.forEach(size => { %>
                                     <div class="check-size">
-                                        <% if( product.Sizes.find(e=>e.id == size.id) != undefined){ %>
+                                        <% if(!locals.oldData && product.Sizes.find(e=>e.id == size.id) != undefined){ %>
                                         <input class="chk chk-size"
                                         type="checkbox" 
                                         value="<%= size.id %>" 

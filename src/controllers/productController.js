@@ -148,8 +148,8 @@ const productController = {
             db.Colours.findAll(),
             db.Sizes.findAll()
         ])
-        .then(([product,styles,categories,colours,size]) => {
-            return res.render("products/productEdition", { product,styles,categories,colours,size });
+        .then(([product,styles,categories,colours,sizes]) => {
+            return res.render("products/productEdition", { product,styles,categories,colours,sizes });
         })
         .catch(err => console.log("producto",err));
     },
@@ -179,15 +179,36 @@ const productController = {
                 }
                 console.log(resultValidation.errors);
                 if(resultValidation.errors.length > 0 ){ 
-                    Promise.all([db.Categories.findAll(),db.Sizes.findAll(),db.Styles.findAll(),db.Colours.findAll()])
-                    .then(([categories,sizes,styles,colours])=>{
-                        return res.render('products/productCreate', { 
-                            errors: resultValidation.mapped(), 
-                            oldData: req.body,
+
+                    Promise.all([
+                        db.Products.findByPk(req.params.id,
+                            {include: [ {association: 'ImageProduct'},
+                                        {association: 'Colours'},
+                                        {association: 'Sizes'}
+                        ]}),
+                        db.Styles.findAll(),
+                        db.Categories.findAll(),
+                        db.Colours.findAll(),
+                        db.Sizes.findAll()
+                    ])
+                    .then(([product,styles,categories,colours,sizes])=>{
+                        let oldData= req.body;
+                        console.log(oldData);
+                        categories.forEach(cat =>{
+                            if(!req.body && cat.id == product.idCategory){
+                                log("Entre al product category")
+                            }else if(req.body && cat.id == req.body.category){
+                                log("Entre al oldData",cat.name)
+                            }
+                        })
+                        return res.render('products/productEdition', { 
+                            errors: resultValidation.mapped(),
+                            oldData,
                             categories, 
                             sizes,
-                            styles, 
-                            colours
+                            styles,
+                            colours,
+                            product
                         })
                     })
                     .catch(err=>log(err))
@@ -267,13 +288,13 @@ const productController = {
                               }
                         })
                         .catch(err => console.log("imagen",err))
+                        return res.redirect("/products")
                 }
                 
             })
             .catch(err => log("imagen",err))
         })
         .catch(err => log("producto",err))
-        return res.redirect('/products') 
     },
 
     filter: (req,res)=>{ 
