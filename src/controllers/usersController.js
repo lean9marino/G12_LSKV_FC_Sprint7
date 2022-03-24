@@ -121,7 +121,7 @@ const usersController = {
 			})
 		.then(user=>{
 			let f = user.date_of_birth; 
-			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
+			let day = String(f.getDate()).length > 1 ? `${f.getDate()}` : `0${f.getDate()}`; 
 			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
 			let year = String(f.getFullYear()).length > 1 ? `${f.getFullYear()}` : `0${f.getFullYear()}`; 
 			let fecha = `${year}-${month}-${day}`;
@@ -138,7 +138,7 @@ const usersController = {
 			})
 		.then(user=>{
 			let f = user.date_of_birth; 
-			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
+			let day = String(f.getDate()).length > 1 ? `${f.getDate()}` : `0${f.getDate()}`; 
 			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
 			let year = String(f.getFullYear()).length > 1 ? `${f.getFullYear()}` : `0${f.getFullYear()}`; 
 
