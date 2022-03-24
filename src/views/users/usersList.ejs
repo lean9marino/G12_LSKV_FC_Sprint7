@@ -15,10 +15,17 @@
                                     <img src='/images/users/<%=element.image_users[0].url_name%>' >     
                                 </a>
                                 <div class="description">
-                                    <h4> <%= element.userName %> </h4>   
+                                    <h4> <%= element.userName %> </h4>
                                     <p class="name"><%=element.name%><%=element.lastName%></p>
                                     <p class="email"> <%= element.email %> </p>
-                                    <p class="birthday-date"><%= element.date_of_birth %> </p>
+                                    <% 
+                                        let f = element.date_of_birth; 
+			                            let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
+                                        let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
+                                        let year = String(f.getFullYear()).length > 1 ? `${f.getFullYear()}` : `0${f.getFullYear()}`; 
+                                        let fecha = `${year}-${month}-${day}`;
+                                    %> 
+                                    <p class="birthday-date"><%= fecha %> </p>
                                 </div>
                                 <form action="/users/<%=element.id%>?_method=DELETE" method="POST">
                                     <button type="submit" class="bt-delete">ELIMINAR</button>

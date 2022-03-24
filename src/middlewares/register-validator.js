@@ -46,7 +46,7 @@ const validator = [
             return true;
         }), 
 
-    body('dni').notEmpty().withMessage('Debe un DNI').bail()
+    body('dni').notEmpty().withMessage('Debe completar este campo').bail()
         .isLength({min:7, max:9}).withMessage('Escriba un DNI valido'),
 
     body('fNac').notEmpty().withMessage('Debe elegir una fecha').bail()

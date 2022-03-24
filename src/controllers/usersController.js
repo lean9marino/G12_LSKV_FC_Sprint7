@@ -11,6 +11,7 @@ const usersController = {
     login: function(req,res) {
 		res.render('users/login')
     },
+
     session: function (req,res){
 		const resultValidation = validationResult(req);
 		log('Resultados de Validacion BACK')
@@ -43,9 +44,11 @@ const usersController = {
 			return res.render("users/login", {errors: resultValidation.errors})
 		}
 	},
+	
     register: function(req,res) {
         return res.render("users/register");
     },
+
 	store: function(req, res){
 		const resultValidation = validationResult(req);
 		log('Aca va el file: ');
@@ -120,7 +123,7 @@ const usersController = {
 			let f = user.date_of_birth; 
 			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
 			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
-			let year = String(f.getFullYear()+1).length > 1 ? `${f.getFullYear()+1}` : `0${f.getFullYear()+1}`; 
+			let year = String(f.getFullYear()).length > 1 ? `${f.getFullYear()}` : `0${f.getFullYear()}`; 
 			let fecha = `${year}-${month}-${day}`;
 			log('fecha', fecha)
 			return res.render(`users/usuario`,{ element : user, fecha})
@@ -137,7 +140,7 @@ const usersController = {
 			let f = user.date_of_birth; 
 			let day = String(f.getDate()+1).length > 1 ? `${f.getDate()+1}` : `0${f.getDate()+1}`; 
 			let month = String(f.getMonth()+1).length > 1 ? `${f.getMonth()+1}` : `0${f.getMonth()+1}`; 
-			let year = String(f.getFullYear()+1).length > 1 ? `${f.getFullYear()+1}` : `0${f.getFullYear()+1}`; 
+			let year = String(f.getFullYear()).length > 1 ? `${f.getFullYear()}` : `0${f.getFullYear()}`; 
 
 			let fecha = `${year}-${month}-${day}`;
 			log('fecha', fecha)
