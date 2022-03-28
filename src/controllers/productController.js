@@ -447,19 +447,32 @@ const productController = {
         db.Image_product.findAll({where:{idproducts:req.params.id}})
         .then(ArrayDeImgs =>{
             ArrayDeImgs.forEach(img=>{
-                console.log(path.join(__dirname,`../../public/images/products/${img.urlName}`))
-                fs.unlinkSync(path.join(__dirname,`../../public/images/products/${img.urlName}`))
+                fs.unlink(path.join(__dirname,`../../public/images/products/${img.urlName}`),(err => {
+                    if (err) console.log(err);
+                    else {
+                      console.log("\nDeleted file: example_file.txt");
+                    
+                      // Get the files in current directory
+                      // after deletion
+                      getFilesInDirectory();
+                    }
+                }));
+                
             })
             //Hay que ver si se eliminan todas las imagenes 
             db.Image_product.destroy({
                 where:{idproducts:req.params.id}
             })
-            .then(db.Products.destroy({
-                where:{id: req.params.id}
-            }))
+            .then(()=>{
+                db.Products.destroy({
+                    where:{id: req.params.id}
+                    })
+                return res.redirect("/products")
+            })
             .catch(err=>log(err));
         })
-    res.redirect("/products")
+        .catch(err=>log(err));
+    
     }
 }
    
