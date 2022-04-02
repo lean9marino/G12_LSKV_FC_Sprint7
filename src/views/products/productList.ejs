@@ -10,7 +10,7 @@
                     <% productList.forEach(element => { %>
                             
                         <article>
-                            <a href="/products/<%= element.id  %>"><img src="/images/products/<%= element.ImageProduct[0].urlName %>"></a>
+                            <a href="/products/<%= element.id  %>"><img src="/images/products/<%= element.ImageProduct[0].urlName %>" width="150px" height="300px"></a>
                                 <div class="descripcion">
                                     <p class="precio">$<%= element.price %> </p>
                                     <p class="category"><%= element.Styles.name %> </p>    

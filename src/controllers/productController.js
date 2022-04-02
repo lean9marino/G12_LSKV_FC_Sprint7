@@ -132,7 +132,7 @@ const productController = {
                 })
             })
             .catch(err => log(err))
-            return res.redirect('/'); 
+            return res.redirect('/products'); 
         }
     },
     
@@ -155,156 +155,150 @@ const productController = {
     },
 
     prodEdition: (req,res)=>{
-    db.Products.findByPk(req.params.id)
-        .then(product => {
-            db.Image_product.findOne({where:{idproducts : req.params.id}})
-            .then(resI =>  {
-                let colorArray = req.body.color;
-                let sizesArray = req.body.sizes;
-                if(!Array.isArray(req.body.color)) colorArray = [req.body.color];
-                if(!Array.isArray(req.body.sizes)) sizesArray = [req.body.sizes];  
-                log("Aca color",colorArray); 
-                log("Aca va size", sizesArray)
-                let imgSecArray = req.body.imgSec;
-                if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
-                if(req.files.images){ 
-                    for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
+        let colorArray = req.body.color;
+        let sizesArray = req.body.sizes;
+        if(!Array.isArray(req.body.color)) colorArray = [req.body.color];
+        if(!Array.isArray(req.body.sizes)) sizesArray = [req.body.sizes]; 
+
+        let imgSecArray = req.body.imgSec; // ID de las imagenes seleccionadas en el form (para delete)
+        if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
+
+        let filenamesImgSec = [];
+        if(req.files.images){ 
+            for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
+        }
+
+        log('Aca va Files:',req.files);
+        log('Aca va BODY:',req.body);
+
+        const resultValidation = validationResult(req); 
+        log(resultValidation.errors);
+        if( resultValidation.errors.length > 0 ){
+            Promise.all([
+                db.Products.findByPk(req.params.id,
+                    {include: ['ImageProduct','Colours','Sizes'
+                ]}),
+                db.Styles.findAll(),
+                db.Categories.findAll(),
+                db.Colours.findAll(),
+                db.Sizes.findAll()
+            ])
+            .then(([product,styles,categories,colours,sizes])=>{
+                let oldData = req.body;
+                oldData.color = colorArray;
+                oldData.sizes = sizesArray;
+                oldData.imgSec = imgSecArray;
+                log('Aca OldDATA: ',oldData);
+                // categories.forEach(cat =>{
+                //     if(!req.body && cat.id == product.idCategory){
+                //         log("Entre al product category")
+                //     }else if(req.body && cat.id == req.body.category){
+                //          log("Entre al oldData",cat.name)
+                //     }
+                // })
+                return res.render('products/productEdition', { 
+                    errors: resultValidation.mapped(),
+                    oldData,
+                    categories, 
+                    sizes,
+                    styles,
+                    colours,
+                    product
+                })
+            })
+            .catch(err=>log(err))
+        }else{
+            db.Products.update(
+                {
+                    name: req.body.name,
+                    price: Number(req.body.price),
+                    description: req.body.description, 
+                    idStar: 1,
+                    idCategory: Number(req.body.category),
+                    idStyle: Number(req.body.Style),
+                    discount: 0, 
+                    shipping: 0,
+                },
+                {
+                    where: {id: req.params.id}
                 }
-                console.log('Aca va Files: ');
-                console.log(req.files);
-                console.log('Aca va BODY: ');
-                console.log(req.body);
-                const resultValidation = validationResult(req); 
-                let filenamesImgSec = [];
-                console.log(resultValidation.errors);
-                if( resultValidation.errors.length > 0 ){
-                    Promise.all([
-                        db.Products.findByPk(req.params.id,
-                            {include: [ {association: 'ImageProduct'},
-                                        {association: 'Colours'},
-                                        {association: 'Sizes'}
-                        ]}),
-                        db.Styles.findAll(),
-                        db.Categories.findAll(),
-                        db.Colours.findAll(),
-                        db.Sizes.findAll()
-                    ])
-                    .then(([product,styles,categories,colours,sizes])=>{
-                        let oldData = req.body;
-                        let colorArray = oldData.color;
-                        let sizesArray = oldData.sizes;
-                        if(!Array.isArray(req.body.color)) colorArray = [oldData.color];
-                        if(!Array.isArray(req.body.sizes)) sizesArray = [oldData.sizes];  
-                        oldData.color = colorArray;
-                        oldData.sizes = sizesArray;
-                        let imgSecArray = req.body.imgSec;
-                        if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
-                        if(req.files.images){ 
-                            for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
-                        }
-                        oldData.imgSec = imgSecArray;
-                        console.log(oldData);
-                        categories.forEach(cat =>{
-                            if(!req.body && cat.id == product.idCategory){
-                                log("Entre al product category")
-                            }else if(req.body && cat.id == req.body.category){
-                                log("Entre al oldData",cat.name)
-                            }
-                        })
-                        return res.render('products/productEdition', { 
-                            errors: resultValidation.mapped(),
-                            oldData,
-                            categories, 
-                            sizes,
-                            styles,
-                            colours,
-                            product
+            )
+            .then(()=>{
+                //destruccion de tablas intermedias
+                db.colours_product.destroy({where:{product_id:req.params.id}})
+                    .then(()=>{// creacion de las a partir de los datos dentro de las arrays del form
+                        colorArray.forEach(colour=>{
+                            db.colours_product.create({
+                                product_id:req.params.id, 
+                                colour_id: colour
+                            })
+                            .catch(err=>log(err)); 
                         })
                     })
-                    .catch(err=>log(err))
-                }else{
-                    db.Products.update(
-                        {
-                            name: req.body.name,
-                            price: Number(req.body.price),
-                            description: req.body.description, 
-                            idStar: 1,
-                            idCategory: req.body.category,
-                            idStyle: req.body.Style,
-                            discount: 0, 
-                            shipping: 0,
-                        },
-                        {
-                            where: {id: req.params.id}
-                        })
-                        .then(()=>{//destruccion de tablas intermedias
-                            db.colours_product.destroy({where:{
-                                product_id:req.params.id
-                            }})
-                            .then(()=>{// creacion de las a partir de los datos dentro de las arrays del form
-                                colorArray.forEach(colour=>{
-                                    db.colours_product.create({
-                                        product_id:req.params.id, 
-                                        colour_id: colour
-                                    })
-                                    .catch(err=>log(err)); 
-                                })
-                            })
+                    .catch(err=>log(err)); 
 
-                            db.sizes_product.destroy({where:{
-                                product_id:req.params.id
-                                }})
-                                .then(()=>{
-                                sizesArray.forEach(size=>{
-                                    db.sizes_product.create({
-                                        product_id:req.params.id,
-                                        size_id: size
-                                    })
-                                    .then()
-                                    .catch(err=>log(err)); 
-                                })
+                db.sizes_product.destroy({where:{product_id:req.params.id}})
+                    .then(()=>{
+                    sizesArray.forEach(size=>{
+                        db.sizes_product.create({
+                            product_id:req.params.id,
+                            size_id: size
                             })
+                        .catch(err=>log(err)); 
                         })
-                        .then(()=>{//imagenes Secundarias
-                            imgSecArray.forEach(imgSec=>{
-                                db.Image_product.findByPk(imgSec)
-                                .then((imgS)=>{
-                                    fs.unlinkSync(path.join(__dirname,`../../public/images/products/${imgS.urlName}`))
-                                    db.Image_product.destroy({where:{
-                                        id:imgSec
-                                    }}).catch((err)=>console.log("Destroy imgSec",err))
-                                })
-                            })
-                            filenamesImgSec.forEach((img,i,arr)=>{
-                                db.Image_product.create({
-                                    urlName: img,
-                                    idproducts: req.params.id,
-                                    order: i + 2
-                                })
-                                .then(valor=>log(valor))
-                                .catch(err => log(err));
-                            })
+                    })
+                    .catch(err=>log(err)); 
+
+                    //imagenes Secundarias (para que se borren)
+                    imgSecArray.forEach(imgSec=>{
+                        log('ID Img a Eliminar',imgSec);
+                        db.Image_product.findByPk(imgSec)
+                        .then((imgS)=>{
+                            fs.unlink(path.join(__dirname,`../../public/images/products/${imgS.urlName}`),(err=>{
+                                if(err) {
+                                    log('Eliminacion de imgs Sec:',err);
+                                }else{ 
+                                    console.log("\nDeleted file: example_file.txt");
+                                }
+                            }))
+                            db.Image_product.destroy({where:{
+                                id:imgSec
+                            }})
+                            .catch((err)=>console.log("Destroy imgSec",err))
                         })
-                        .then(()=>{
-                            if (req.files.image){
-                                db.Image_product.findOne({where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})//busqueda de la imagen principal
-                                .then((imgPV)=>{
-                                    console.log("ImagenP vieja",imgPV)
-                                    fs.unlinkSync(path.join(__dirname,`../../public/images/products/${imgPV.urlName}`))//imagenP vieja eliminacion local
-                                    db.Image_product.update({//cambiando el urlname de la img principal
-                                        urlName: req.files.image[0].filename,
-                                    },{where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}}).catch((err)=> "ImgP update",err)
-                                })
-                              }
+                    })
+                    filenamesImgSec.forEach(img=>{
+                        db.Image_product.create({
+                            urlName: img,
+                            idproducts: req.params.id,
+                            order: 2 
                         })
-                        .catch(err => console.log("imagen",err))
-                        return res.redirect("/products")
-                }
-                
+                        .then(valor=>log(valor))
+                        .catch(err => log(err));
+                    })
             })
-            .catch(err => log("imagen",err))
-        })
-        .catch(err => log("producto",err))
+            .catch(err=>{log('prodUpdate:',err)})
+
+            if (req.files.image){
+                db.Image_product.findOne({where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})//busqueda de la imagen principal
+                .then((imgPV)=>{
+                    console.log("ImagenP vieja",imgPV)
+                    fs.unlink(path.join(__dirname,`../../public/images/products/${imgPV.urlName}`),(err=>{
+                        if(err) {
+                            log(err);
+                        }else{ 
+                            console.log("\nDeleted file: example_file.txt");
+                        }
+                    }))
+                    db.Image_product.update({//cambiando el urlname de la img principal
+                        urlName: req.files.image[0].filename,
+                    },{where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})
+                    .catch((err)=> log("ImgP update",err));
+                })
+                .catch(err=>{log(err)})
+              }
+        }
+        return res.redirect("/products")
     },
 
     filter: (req,res)=>{ 
