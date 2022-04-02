@@ -82,6 +82,7 @@
                                         <label class="lbl" for = "colour<%=colour.id %>">
                                             <img src = "/images/colores/<%= colour.urlColour %>.jpg">
                                         </label>
+                                        
                                         <% } else if(locals.oldData && oldData.color.includes(`${colour.id}`)) { %>
                                         <input class="chk chk-color" 
                                         type="checkbox"
@@ -168,7 +169,7 @@
 
                         <label for="description">Descripción: 
                             <textarea name="description" id="description" cols="30" rows="5" class="description">
-                                <%= locals.oldData ? oldData.descripcion : product.descripcion%>
+                                <%= locals.oldData ? oldData.description : product.description%>
                             </textarea>
                             <% if (locals.errors && errors.description) { %>
                                 <div class="text-danger" style="width: 100%">

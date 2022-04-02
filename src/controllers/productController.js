@@ -159,7 +159,6 @@ const productController = {
         .then(product => {
             db.Image_product.findOne({where:{idproducts : req.params.id}})
             .then(resI =>  {
-                let imgP = resI.urlName
                 let colorArray = req.body.color;
                 let sizesArray = req.body.sizes;
                 if(!Array.isArray(req.body.color)) colorArray = [req.body.color];
@@ -168,18 +167,17 @@ const productController = {
                 log("Aca va size", sizesArray)
                 let imgSecArray = req.body.imgSec;
                 if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
+                if(req.files.images){ 
+                    for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
+                }
                 console.log('Aca va Files: ');
                 console.log(req.files);
                 console.log('Aca va BODY: ');
                 console.log(req.body);
                 const resultValidation = validationResult(req); 
                 let filenamesImgSec = [];
-                if(req.files.images){ 
-                    for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
-                }
                 console.log(resultValidation.errors);
-                if(resultValidation.errors.length > 0 ){ 
-
+                if( resultValidation.errors.length > 0 ){
                     Promise.all([
                         db.Products.findByPk(req.params.id,
                             {include: [ {association: 'ImageProduct'},
@@ -192,7 +190,19 @@ const productController = {
                         db.Sizes.findAll()
                     ])
                     .then(([product,styles,categories,colours,sizes])=>{
-                        let oldData= req.body;
+                        let oldData = req.body;
+                        let colorArray = oldData.color;
+                        let sizesArray = oldData.sizes;
+                        if(!Array.isArray(req.body.color)) colorArray = [oldData.color];
+                        if(!Array.isArray(req.body.sizes)) sizesArray = [oldData.sizes];  
+                        oldData.color = colorArray;
+                        oldData.sizes = sizesArray;
+                        let imgSecArray = req.body.imgSec;
+                        if(!Array.isArray(req.body.imgSec)) imgSecArray = [req.body.imgSec];
+                        if(req.files.images){ 
+                            for(let i =0; i < req.files.images.length; i++) filenamesImgSec.push(req.files.images[i].filename);
+                        }
+                        oldData.imgSec = imgSecArray;
                         console.log(oldData);
                         categories.forEach(cat =>{
                             if(!req.body && cat.id == product.idCategory){
