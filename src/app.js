@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const port = 3000;
+const port = 3001;
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const session=require("express-session");
