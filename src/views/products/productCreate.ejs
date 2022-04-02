@@ -64,11 +64,23 @@
                             <div class="color">
                                 <% colours.forEach(colour => { %>
                                     <div class="check-c-s">
-                                        <input class="chk" type="checkbox" value="<%=colour.id %>" name="color" id="colour<%=colour.id %>">
-                                        <label class="lbl" for = "colour<%=colour.id %>">
-                                            <img src = "/images/colores/<%= colour.urlColour %>.jpg"">
-                                        </label> 
-                                    </div>    
+                                        <%if(locals.oldData && oldData.color.includes(`${colour.id}`)) { %>
+                                            <input class="chk chk-color" 
+                                            type="checkbox"
+                                            value='<%=colour.id%>' 
+                                            name="color" 
+                                            id="colour<%=colour.id %>" checked>
+                                            <label class="lbl" for = "colour<%=colour.id %>">
+                                                <img src = "/images/colores/<%= colour.urlColour %>.jpg">
+                                            </label>
+                                        
+                                            <% }else{ %> 
+                                            <input class="chk chk-color" type="checkbox" value="<%=colour.id %>" name="color" id="colour<%=colour.id %>">
+                                            <label class="lbl" for = "colour<%=colour.id %>">
+                                                <img src = "/images/colores/<%= colour.urlColour %>.jpg">
+                                            </label> 
+                                        <% }; %>
+                                    </div>
                                 <% }) %>
                             </div>
                             <% if (locals.errors && errors.color) { %>
@@ -83,8 +95,17 @@
                             <div class="size">
                                 <% sizes.forEach(size => { %>
                                     <div class="check-size">
-                                        <input class="chk chk-size" type="checkbox" value="<%= size.id %>"  name="sizes" id ="size<%= size.id %>">
-                                        <label class="lbl" for = "size<%= size.id %>"> <%= size.name %></label>
+                                        <% if(locals.oldData && oldData.sizes.includes(`${size.id}`) ) { %>
+                                            <input class="chk chk-size"
+                                            type="checkbox" 
+                                            value="<%= size.id %>" 
+                                            name="sizes" 
+                                            id ="size<%= size.id %>" checked>
+                                            <label class="lbl" for = "size<%= size.id %>"><%= size.name %></label>
+                                        <% }else{ %> 
+                                            <input class="chk" type="checkbox" value="<%= size.id %>"  name="sizes" id ="size<%= size.id %>">
+                                            <label class="lbl" for = "size<%= size.id %>"><%= size.name %></label>
+                                        <% } %> 
                                     </div>
                                 <% }) %> 
                             </div>

@@ -119,7 +119,6 @@ const productController = {
                         product_id:prod.id, 
                         colour_id: colour
                     })
-                    .then()
                     .catch(err=>log(err)); 
                 })
                 sizesArray.forEach(size=>{
@@ -127,12 +126,11 @@ const productController = {
                         product_id:prod.id,
                         size_id: size
                     })
-                    .then()
                     .catch(err=>log(err)); 
                 })
-            })
+            }).then(()=> res.redirect('/products'))
             .catch(err => log(err))
-            return res.redirect('/'); 
+            
         }
     },
     
@@ -446,8 +444,20 @@ const productController = {
         //Primero eliminamos las imagenes 
         db.Image_product.findAll({where:{idproducts:req.params.id}})
         .then(ArrayDeImgs =>{
-            ArrayDeImgs.forEach(img=>{
-                fs.unlink(path.join(__dirname,`../../public/images/products/${img.urlName}`),(err => {
+            if(Array.isArray(ArrayDeImgs)){
+                ArrayDeImgs.forEach(img=>{
+                    fs.unlink(path.join(__dirname,`../../public/images/products/${img.urlName}`),(err => {
+                        if (err) console.log(err);
+                        else {
+                          console.log("\nDeleted file: example_file.txt");
+                          // Get the files in current directory
+                          // after deletion
+                        }
+                    }));
+                    
+                })
+            }else{
+                fs.unlink(path.join(__dirname,`../../public/images/products/${ArrayDeImgs.urlName}`),(err => {
                     if (err) console.log(err);
                     else {
                       console.log("\nDeleted file: example_file.txt");
@@ -456,8 +466,9 @@ const productController = {
                       getFilesInDirectory();
                     }
                 }));
-                
-            })
+            }
+        })
+        .then(()=>{
             //Hay que ver si se eliminan todas las imagenes 
             db.Image_product.destroy({
                 where:{idproducts:req.params.id}
@@ -465,8 +476,8 @@ const productController = {
             .then(()=>{
                 db.Products.destroy({
                     where:{id: req.params.id}
-                    })
-                return res.redirect("/products")
+                    }).then(()=> res.redirect("/products"))
+                
             })
             .catch(err=>log(err));
         })
