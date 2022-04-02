@@ -37,6 +37,15 @@ window.addEventListener("load", function(){
             error_password = ('La contraseña de tener almenos 6 caracteres');
             passError.innerHTML = "<p>" + error_password + "</p>";
         } else passError.innerHTML = "";
+
+        regex = /^(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ]/;
+
+        //Se muestra un texto válido/inválido a modo de ejemplo
+        if (regex.test(password.value)) {
+          
+        } else {
+          passError.innerText = "Debe tener como minimo una masyuscula, una minuscula y un numero";
+        }
     })
 
     confirmPassword.addEventListener('blur',function(e){
@@ -103,6 +112,13 @@ window.addEventListener("load", function(){
             emailError.innerHTML = "<p>" + error_email + "</p>";
             log('Entre en email')
         }
+        emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+    if (emailRegex.test(email.value)) {
+    
+    } else {
+      emailError.innerText = "Tiene que tener un punto, una arroba y terminar con com ";
+    }
     })
     
     let dniError = document.querySelector('div.text-danger-dni');
