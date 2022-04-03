@@ -29,14 +29,29 @@
                     </p>
                             <section class="det-compra">
                                 <article class="detalle-prod">
-                                    <div class="imagen-prod"><img src="/images/products/ " alt="Foto del producto" class="Foto del producto"></div>
+                                    <div class="imagen-prod"><img src="/images/products/<%= product.ImageProduct[0].urlName %>" alt="Foto del producto" class="Foto del producto"></div>
                                     <div>
-                                        <h4 class="nomProd">  </h4>
-                                        <p class="Size">Talle:   </p>
+                                        <h4 class="nomProd"><%= product.name %> </h4>
+                                        <p class="Size">Talle: <%= size.name %> </p>
+                                        <p class="Size">Color:</p>
+
+                                        <form action="">
+                                            <div class="color">
+                                                <div class="check-c-s">
+                                                    <input class="chk pCol" type="checkbox" value="<%=color.id%>" name="color" id="colour<%=color.id%> checked">
+                                                    <label class="lbl" for = "colour<%=color.id%>">
+                                                        <img src = "/images/colores/<%=color.urlColour%>.jpg">
+                                                    </label> 
+                                                </div>
+                                            </div>
+                                        </form>
+                                        
+                                        
+                                        
                                         <div>
                                             <form action="/" method="POST">
                                                 <label for="cant">
-                                                    Cantidad:
+                                                    Cantidad: <%= cant %> 
                                                     <p class="cant"></p>
                                                 </label>
                                             </form>
@@ -47,11 +62,11 @@
                                 <article class="precio">
                                     <div>
                                         <h4>PRECIO UNITARIO:</h4>
-                                        <p class="price">AR </p>
+                                        <p class="price">AR$ <%= product.price %></p>
                                     </div>
                                     <div>
                                         <h4>TOTAL:</h4>
-                                        <p class="total">AR </p>
+                                        <p class="total">AR$ <%= total %>  </p>
                                     </div>
                                 </article>
                 
@@ -60,14 +75,14 @@
                                 </article>
                              </section>
                              <div class="bEnv">
-                                <button type="submit"> Siguiente </button>
+                                 <form action='/products/productCart4'><button type="submit">Siguiente</button></form>   
                             </div>
                                 
 
-                <h4>No hay productos en el carrito</h4>
+                
             
         </main>
         <%- include('../partials/footer') %>
-        <script src="/js/carrito.js"></script>
+        
     </body>
 </html>

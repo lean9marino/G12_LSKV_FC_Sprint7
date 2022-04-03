@@ -20,38 +20,53 @@
                 <p class="title-1-prodCart">
                     Tu carrito tiene x productos distintos
                 </p>
-                        <section class="det-compra">
-                            <article class="detalle-prod">
-                                <div class="imagen-prod"><img src="/images/products/<%= product['img-pr'] %> " alt="Foto del producto" class="Foto del producto"></div>
-                                <div>
-                                    <h4><%= product.name %> </h4>
-                                    <p>Talle <%= product.size %> </p>
-                                    <div>
-                                        <form action="/" method="POST">
-                                            <label for="cant">
-                                                Cantidad:
-                                                <input type="number" id="cant" name="cant" value="<%= product.cant %>">
-                                            </label>
-                                        </form>
+                <section class="det-compra">
+                    <article class="detalle-prod">
+                        <div class="imagen-prod"><img src="/images/products/<%= product.ImageProduct[0].urlName %>" alt="Foto del producto" class="Foto del producto"></div>
+                        <div>
+                            <h4 class="nomProd"><%= product.name %> </h4>
+                            <p class="Size">Talle: <%= size.name %> </p>
+                            <p class="Size">Color:</p>
+
+                            <form action="">
+                                <div class="color">
+                                    <div class="check-c-s">
+                                        <input class="chk pCol" type="checkbox" value="<%=color.id%>" name="color" id="colour<%=color.id%> checked">
+                                        <label class="lbl" for = "colour<%=color.id%>">
+                                            <img src = "/images/colores/<%=color.urlColour%>.jpg">
+                                        </label> 
                                     </div>
                                 </div>
-                            </article>
-            
-                            <article class="precio">
-                                <div>
-                                    <h4>PRECIO UNITARIO:</h4>
-                                    <p>AR$ <%= product.price %> </p>
-                                </div>
-                                <div>
-                                    <h4>TOTAL:</h4>
-                                    <p>AR$ <%= product.total %> </p>
-                                </div>
-                            </article>
-            
-                            <article class="boton">
-                                <button type="reset" class="style-button">Borrar</button>
-                            </article>
-                        </section>
+                            </form>
+                            
+                            
+                            
+                            <div>
+                                <form action="/" method="POST">
+                                    <label for="cant">
+                                        Cantidad: <%= cant %> 
+                                        <p class="cant"></p>
+                                    </label>
+                                </form>
+                            </div>
+                        </div>
+                    </article>
+    
+                    <article class="precio">
+                        <div>
+                            <h4>PRECIO UNITARIO:</h4>
+                            <p class="price">AR$ <%= product.price %></p>
+                        </div>
+                        <div>
+                            <h4>TOTAL:</h4>
+                            <p class="total">AR$ <%= total %>  </p>
+                        </div>
+                    </article>
+    
+                    <article class="boton">
+                        <button type="reset" class="style-button">Borrar</button>
+                    </article>
+                 </section>
                         <article class="total">
                             <div>
                                 <h5>TOTAL DE PRODCUTOS AR$x.xxx</h5>

@@ -104,7 +104,6 @@ const usersController = {
 						console.log("\nDeleted file: example_file.txt");
 						// Get the files in current directory
 						// after deletion
-						getFilesInDirectory();
 					}
 				})); 
 			} 
@@ -211,8 +210,7 @@ const usersController = {
 							else{ 
 								console.log("\nDeleted file: example_file.txt");
 								// Get the files in current directory
-								// after deletion
-								getFilesInDirectory();
+								// after deletion	
 							}
 						})); 
 					} 
@@ -223,7 +221,16 @@ const usersController = {
 					},{
 						where: { idUsers: req.params.id }
 					})
-					if( String(img.url_name) != "default.png" ) fs.unlinkSync(path.join(__dirname,`../../public/images/users/${img.url_name}`)); 
+					if( String(img.url_name) != "default.png" ){
+						fs.unlink(path.join(__dirname,`../../public/images/users/${img.url_name}`),(err=>{
+							if(err) log(err);
+							else{ 
+								console.log("\nDeleted file: example_file.txt");
+								// Get the files in current directory
+								// after deletion	
+							}
+						})); 
+					}
 				}
 				res.redirect(`/users/${req.params.id}`);
 			})

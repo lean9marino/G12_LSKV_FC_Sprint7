@@ -412,17 +412,40 @@ const productController = {
         //console.log("cantidad ",req.body.cant)
         //console.log("color ",req.body.color)
         //console.log("talle ",req.body.sizes)
-        console.log(localStorage.getItem("carrito"))
-        let prod = {id:req.params.id,cant:req.body.cant,color:req.body.color,size:req.body.sizes}
+ 
+        let prod = [req.params.id,req.body.cant,req.body.sizes,req.body.color]
 
-        
-        
+        res.cookie('carrito', prod, {maxAge:60000*60*60});
+        console.log("cokieeee",req.cookies.carrito)
+
+        res.redirect('/products/productCart')
         res.redirect('/products/productCart')
     },
     prodCart1: function(req,res){
         if(req.cookies.carrito){
-            let products = localStorage.getItem("carrito")
-            return res.render("products/productCart",{products})
+            log(req.cookies.carrito)
+            db.Products.findByPk(req.cookies.carrito[0],
+                {include: [ {association: 'ImageProduct'},
+                            {association: 'Colours'},
+                            {association: 'Sizes'}
+            ]})
+            .then(product =>{
+                log('colores',product.Colours);
+                log('sizes',product.Sizes);
+
+                let size = product.Sizes.find(siz => siz.id == req.cookies.carrito[2])
+                log("Talle encontrado:",size)
+
+                let color = product.Colours.find(col => col.id == req.cookies.carrito[3])
+                log("color encontrado:",color)
+
+                let cant = Number(req.cookies.carrito[1])
+                let total = product.price*cant
+                
+                return res.render("products/productCart",{product,size,color,cant,total}) 
+            })
+            .catch(err => log("error carrito", err))
+            
         }else{
             return res.render("products/productCart")
         }
@@ -438,8 +461,28 @@ const productController = {
     
     prodCart4: function(req,res) {
         if(req.cookies.carrito){
-            let products = localStorage.getItem("carrito")
-            return res.render("products/productCart4",{products})
+            log(req.cookies.carrito)
+            db.Products.findByPk(req.cookies.carrito[0],
+                {include: [ {association: 'ImageProduct'},
+                            {association: 'Colours'},
+                            {association: 'Sizes'}
+            ]})
+            .then(product =>{
+                log('colores',product.Colours);
+                log('sizes',product.Sizes);
+
+                let size = product.Sizes.find(siz => siz.id == req.cookies.carrito[2])
+                log("Talle encontrado:",size)
+
+                let color = product.Colours.find(col => col.id == req.cookies.carrito[3])
+                log("color encontrado:",color)
+
+                let cant = Number(req.cookies.carrito[1])
+                let total = product.price*cant
+                
+                return res.render("products/productCart4",{product,size,color,cant,total}) 
+            })
+            .catch(err => log("error carrito", err))
         }else{
             return res.render("products/productCart4")
         }
