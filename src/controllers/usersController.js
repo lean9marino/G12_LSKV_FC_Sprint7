@@ -184,7 +184,7 @@ const usersController = {
 			lastName: req.body.surname,
 			idRoles: 0
 		},{
-			where:{id:req.params.id}
+			where:{id: user.id}
 		})
 		.then(user=>{
 			log('Aca va BODY: '); 

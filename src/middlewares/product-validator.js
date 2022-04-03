@@ -6,7 +6,7 @@ const validator =[
     body('color').notEmpty().withMessage('Debe elegir almenos un color.'), 
     body('sizes').notEmpty().withMessage('Debe elegir almenos un talle.'), 
     body('image').custom((value,{req})=>{
-        var imagenPrincipal = req.files.image[0];
+        var imagenPrincipal = req.files.image;
         console.log(imagenPrincipal); 
         if(!imagenPrincipal) throw new Error('Debe subir la imagen principal.');
         return true;  
