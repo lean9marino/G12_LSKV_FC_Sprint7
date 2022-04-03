@@ -117,7 +117,7 @@ window.addEventListener("load", function(){
     if (emailRegex.test(email.value)) {
     
     } else {
-      emailError.innerText = "Tiene que tener un punto, una arroba y terminar con com ";
+      emailError.innerText = "Debe de tener un [@] y terminar con [.com] ";
     }
     })
     
