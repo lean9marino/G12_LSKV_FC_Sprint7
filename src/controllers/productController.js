@@ -165,7 +165,7 @@ const productController = {
         }
     },
 
-    prodEdition: async (req,res)=>{
+    prodEdition: async(req,res)=>{
         let colorArray = req.body.color;
         let sizesArray = req.body.sizes;
         if(!Array.isArray(req.body.color)) colorArray = [req.body.color];
@@ -185,28 +185,19 @@ const productController = {
         const resultValidation = validationResult(req); 
         log(resultValidation.errors);
         if( resultValidation.errors.length > 0 ){
-            Promise.all([
-                db.Products.findByPk(req.params.id,
+            try{
+                let product = await db.Products.findByPk(req.params.id,
                     {include: ['ImageProduct','Colours','Sizes'
-                ]}),
-                db.Styles.findAll(),
-                db.Categories.findAll(),
-                db.Colours.findAll(),
-                db.Sizes.findAll()
-            ])
-            .then(([product,styles,categories,colours,sizes])=>{
+                ]})
+                let styles = await db.Styles.findAll()
+                let categories = await db.Categories.findAll()
+                let colours = await db.Colours.findAll()
+                let sizes = await db.Sizes.findAll()
                 let oldData = req.body;
                 oldData.color = colorArray;
                 oldData.sizes = sizesArray;
                 oldData.imgSec = imgSecArray;
                 log('Aca OldDATA: ',oldData);
-                // categories.forEach(cat =>{
-                //     if(!req.body && cat.id == product.idCategory){
-                //         log("Entre al product category")
-                //     }else if(req.body && cat.id == req.body.category){
-                //          log("Entre al oldData",cat.name)
-                //     }
-                // })
                 return res.render('products/productEdition', { 
                     errors: resultValidation.mapped(),
                     oldData,
@@ -216,84 +207,75 @@ const productController = {
                     colours,
                     product
                 })
-            })
-            .catch(err=>log(err))
+            }catch(err){
+                err(err)
+            }
+
         }else{
-            db.Products.update(
-                {
-                    name: req.body.name,
-                    price: Number(req.body.price),
-                    description: req.body.description, 
-                    idStar: 1,
-                    idCategory: Number(req.body.category),
-                    idStyle: Number(req.body.Style),
-                    discount: 0, 
-                    shipping: 0,
-                },
-                {
-                    where: {id: req.params.id}
-                }
-            )
-            .then(()=>{
-                //destruccion de tablas intermedias
+            try{
+                db.Products.update(
+                    {
+                        name: req.body.name,
+                        price: Number(req.body.price),
+                        description: req.body.description, 
+                        idStar: 1,
+                        idCategory: Number(req.body.category),
+                        idStyle: Number(req.body.Style),
+                        discount: 0, 
+                        shipping: 0,
+                    },
+                    {
+                        where: {id: req.params.id}
+                    }
+                )
                 db.colours_product.destroy({where:{product_id:req.params.id}})
-                    .then(()=>{// creacion de las a partir de los datos dentro de las arrays del form
-                        colorArray.forEach(colour=>{
-                            db.colours_product.create({
-                                product_id:req.params.id, 
-                                colour_id: colour
-                            })
-                            .catch(err=>log(err)); 
+                .then(()=>{// creacion de las a partir de los datos dentro de las arrays del form
+                    colorArray.forEach(colour=>{
+                        db.colours_product.create({
+                            product_id:req.params.id, 
+                            colour_id: colour
                         })
+                        .catch(err=>log(err)); 
                     })
-                    .catch(err=>log(err)); 
+                 })
 
                 db.sizes_product.destroy({where:{product_id:req.params.id}})
-                    .then(()=>{
-                    sizesArray.forEach(size=>{
-                        db.sizes_product.create({
-                            product_id:req.params.id,
-                            size_id: size
-                            })
-                        .catch(err=>log(err)); 
+                .then(()=>{
+                sizesArray.forEach(size=>{
+                    db.sizes_product.create({
+                        product_id:req.params.id,
+                        size_id: size
                         })
-                    })
                     .catch(err=>log(err)); 
-
-                    //imagenes Secundarias (para que se borren)
-                    imgSecArray.forEach(imgSec=>{
-                        log('ID Img a Eliminar',imgSec);
-                        db.Image_product.findByPk(imgSec)
-                        .then((imgS)=>{
-                            fs.unlink(path.join(__dirname,`../../public/images/products/${imgS.urlName}`),(err=>{
-                                if(err) {
-                                    log('Eliminacion de imgs Sec:',err);
-                                }else{ 
-                                    console.log("\nDeleted file: example_file.txt");
-                                }
-                            }))
-                            db.Image_product.destroy({where:{
-                                id:imgSec
-                            }})
-                            .catch((err)=>console.log("Destroy imgSec",err))
-                        })
                     })
-                    filenamesImgSec.forEach(img=>{
-                        db.Image_product.create({
-                            urlName: img,
-                            idproducts: req.params.id,
-                            order: 2 
-                        })
-                        .then(valor=>log(valor))
-                        .catch(err => log(err));
+                })
+                imgSecArray.forEach( async imgSec=>{
+                    log('ID Img a Eliminar',imgSec);
+                    let imgS = await db.Image_product.findByPk(imgSec)
+                    fs.unlink(path.join(__dirname,`../../public/images/products/${imgS.urlName}`),(err=>{
+                        if(err) {
+                            log('Eliminacion de imgs Sec:',err);
+                        }else{ 
+                            console.log("\nDeleted file: example_file.txt");
+                        }
+                    }))
+                    db.Image_product.destroy({where:{
+                        id:imgSec
+                    }})
+                })
+                filenamesImgSec.forEach(img=>{
+                    db.Image_product.create({
+                        urlName: img,
+                        idproducts: req.params.id,
+                        order: 2 
                     })
-            })
-            .catch(err=>{log('prodUpdate:',err)})
+                })
 
-            if (req.files.image){
-                db.Image_product.findOne({where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})//busqueda de la imagen principal
-                .then((imgPV)=>{
-                    console.log("ImagenP vieja",imgPV)
+                if (req.files.image){
+                    let imgPV = await db.Image_product.findOne({
+                        where:{[Op.and]:[{idproducts:req.params.id},{order:1}]
+                    }})//busqueda de la imagen principal
+                    log("ImagenP vieja",imgPV)
                     fs.unlink(path.join(__dirname,`../../public/images/products/${imgPV.urlName}`),(err=>{
                         if(err) {
                             log(err);
@@ -304,12 +286,13 @@ const productController = {
                     db.Image_product.update({//cambiando el urlname de la img principal
                         urlName: req.files.image[0].filename,
                     },{where:{[Op.and]:[{idproducts:req.params.id},{order:1}]}})
-                    .catch((err)=> log("ImgP update",err));
-                })
-                .catch(err=>{log(err)})
-              }
+                }
+
+                return res.redirect("/products")
+            }catch(err){
+                err(err)
+            }
         }
-        return res.redirect("/products")
     },
 
     filter: async (req,res)=>{ 
@@ -431,17 +414,40 @@ const productController = {
         //console.log("cantidad ",req.body.cant)
         //console.log("color ",req.body.color)
         //console.log("talle ",req.body.sizes)
-        console.log(localStorage.getItem("carrito"))
-        let prod = {id:req.params.id,cant:req.body.cant,color:req.body.color,size:req.body.sizes}
+ 
+        let prod = [req.params.id,req.body.cant,req.body.sizes,req.body.color]
 
-        
-        
+        res.cookie('carrito', prod, {maxAge:60000*60*60});
+        console.log("cokieeee",req.cookies.carrito)
+
+        res.redirect('/products/productCart')
         res.redirect('/products/productCart')
     },
     prodCart1: function(req,res){
         if(req.cookies.carrito){
-            let products = localStorage.getItem("carrito")
-            return res.render("products/productCart",{products})
+            log(req.cookies.carrito)
+            db.Products.findByPk(req.cookies.carrito[0],
+                {include: [ {association: 'ImageProduct'},
+                            {association: 'Colours'},
+                            {association: 'Sizes'}
+            ]})
+            .then(product =>{
+                log('colores',product.Colours);
+                log('sizes',product.Sizes);
+
+                let size = product.Sizes.find(siz => siz.id == req.cookies.carrito[2])
+                log("Talle encontrado:",size)
+
+                let color = product.Colours.find(col => col.id == req.cookies.carrito[3])
+                log("color encontrado:",color)
+
+                let cant = Number(req.cookies.carrito[1])
+                let total = product.price*cant
+                
+                return res.render("products/productCart",{product,size,color,cant,total}) 
+            })
+            .catch(err => log("error carrito", err))
+            
         }else{
             return res.render("products/productCart")
         }
@@ -457,50 +463,63 @@ const productController = {
     
     prodCart4: function(req,res) {
         if(req.cookies.carrito){
-            let products = localStorage.getItem("carrito")
-            return res.render("products/productCart4",{products})
+            log(req.cookies.carrito)
+            db.Products.findByPk(req.cookies.carrito[0],
+                {include: [ {association: 'ImageProduct'},
+                            {association: 'Colours'},
+                            {association: 'Sizes'}
+            ]})
+            .then(product =>{
+                log('colores',product.Colours);
+                log('sizes',product.Sizes);
+
+                let size = product.Sizes.find(siz => siz.id == req.cookies.carrito[2])
+                log("Talle encontrado:",size)
+
+                let color = product.Colours.find(col => col.id == req.cookies.carrito[3])
+                log("color encontrado:",color)
+
+                let cant = Number(req.cookies.carrito[1])
+                let total = product.price*cant
+                
+                return res.render("products/productCart4",{product,size,color,cant,total}) 
+            })
+            .catch(err => log("error carrito", err))
         }else{
             return res.render("products/productCart4")
         }
     },
-    destroy: (req, res) =>{
-        //Primero eliminamos las imagenes 
-        db.Image_product.findAll({where:{idproducts:req.params.id}})
-        .then(ArrayDeImgs =>{
-            if(Array.isArray(ArrayDeImgs)){
-                ArrayDeImgs.forEach(img=>{
-                    fs.unlink(path.join(__dirname,`../../public/images/products/${img.urlName}`),(err => {
-                        if (err) console.log(err);
-                        else {
-                          console.log("\nDeleted file: example_file.txt");
-                        }
-                    }));
-                    
-                })
-            }else{
-                fs.unlink(path.join(__dirname,`../../public/images/products/${ArrayDeImgs.urlName}`),(err => {
+    destroy: async (req, res) =>{
+        try{
+            //Primero eliminamos las imagenes 
+            let ArrayDeImgs = await db.Image_product.findAll({
+                where:{idproducts:req.params.id}
+            })
+            if(!Array.isArray(ArrayDeImgs)) ArrayDeImgs = [ArrayDeImgs];
+            ArrayDeImgs.forEach(img=>{
+                fs.unlink(path.join(__dirname,`../../public/images/products/${img.urlName}`),(err => {
                     if (err) console.log(err);
                     else {
                       console.log("\nDeleted file: example_file.txt");
                     }
                 }));
-            }
-        })
-        .then(()=>{
-            //Hay que ver si se eliminan todas las imagenes 
+            })
             db.Image_product.destroy({
                 where:{idproducts:req.params.id}
             })
+            
+            //Luego eliminamos los colores y sizes 
+            db.colours_product.destroy({where:{product_id:req.params.id}});
+            db.sizes_product.destroy({where:{product_id:req.params.id}})
             .then(()=>{
                 db.Products.destroy({
                     where:{id: req.params.id}
-                    }).then(()=> res.redirect("/products"))
-                
+                    })
             })
-            .catch(err=>log(err));
-        })
-        .catch(err=>log(err));
-    
+            return res.redirect("/products");
+        }catch(err){
+            err(err)
+        }
     }
 }
    

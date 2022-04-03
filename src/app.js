@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(methodOverride('_method')); // Para poder pisar el method="POST" en el formulario por PUT y DELETE
 app.use(cookieParser());
-app.use(session({secret:'secrets!!'}));
+app.use(session({secret:'secrets!!',cookie:{maxAge:60000*60*60},saveUninitialized:true,resave: false}));
 app.use(require('../src/middlewares/user-logged'))
 
 const usersRoutes = require('./routers/userRoutes');

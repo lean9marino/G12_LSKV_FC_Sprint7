@@ -104,7 +104,6 @@ const usersController = {
 						console.log("\nDeleted file: example_file.txt");
 						// Get the files in current directory
 						// after deletion
-						getFilesInDirectory();
 					}
 				})); 
 			} 
@@ -210,6 +209,8 @@ const usersController = {
 							if(err) log(err);
 							else{ 
 								console.log("\nDeleted file: example_file.txt");
+								// Get the files in current directory
+								// after deletion	
 							}
 						})); 
 					} 
@@ -225,6 +226,8 @@ const usersController = {
 							if(err) log(err);
 							else{ 
 								console.log("\nDeleted file: example_file.txt");
+								// Get the files in current directory
+								// after deletion	
 							}
 						})); 
 					}
