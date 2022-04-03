@@ -410,11 +410,6 @@ const productController = {
     },
 
     prodCart: function (req,res){
-        //console.log("id del producto ",req.params.id)
-        //console.log("cantidad ",req.body.cant)
-        //console.log("color ",req.body.color)
-        //console.log("talle ",req.body.sizes)
- 
         let prod = [req.params.id,req.body.cant,req.body.sizes,req.body.color]
 
         res.cookie('carrito', prod, {maxAge:60000*60*60});
